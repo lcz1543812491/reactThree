@@ -36,6 +36,11 @@ export function inintThreeFont() {
 
   const fontLoader = new FontLoader()
 
+  const textureLoader = new THREE.TextureLoader()
+
+  const texture1 = textureLoader.load('/texture/texture-1.png')
+  console.log('texture1', texture1)
+
   //   console.log('font1', font1)
   // console.log('inter', Inter)
 
@@ -44,8 +49,8 @@ export function inintThreeFont() {
     const geometry = new TextGeometry('Hello three.js!', {
       font,
       size: 0.5,
-      height: 0.5,
-      curveSegments: 12,
+      height: 0.2,
+      curveSegments: 5,
       bevelEnabled: true,
       bevelThickness: 0.03,
       bevelSize: 0.02,
@@ -53,9 +58,33 @@ export function inintThreeFont() {
       bevelSegments: 5
     })
 
-    const material3 = new THREE.MeshBasicMaterial()
+    console.log('geometry.computeBoundingBox', geometry)
+    geometry.center()
+
+    const material3 = new THREE.MeshMatcapMaterial({ matcap: texture1 })
+    // material3.wireframe = true
 
     const text = new THREE.Mesh(geometry, material3)
+    const dotsge = new THREE.TorusGeometry(0.3, 0.2, 20, 45)
+    // const dotmat = new THREE.MeshMatcapMaterial({ matcap: texture1 })
+
+    for (let i = 0; i < 90; i++) {
+      const dotmesh = new THREE.Mesh(dotsge, material3)
+
+      dotmesh.position.x = (Math.random() - 0.5) * 10
+      dotmesh.position.y = (Math.random() - 0.5) * 10
+      dotmesh.position.z = (Math.random() - 0.5) * 10
+
+      dotmesh.rotation.x = Math.random() * Math.PI
+      dotmesh.rotation.y = Math.random() * Math.PI
+
+      const scale = Math.random()
+      dotmesh.scale.x = scale
+      dotmesh.scale.y = scale
+      dotmesh.scale.z = scale
+
+      scene.add(dotmesh)
+    }
 
     scene.add(text)
   })
