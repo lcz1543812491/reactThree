@@ -1,17 +1,16 @@
 'use client'
 
-import { inintThreejs } from './utils';
+import { inintThreeFont } from './utils';
 import { useEffect } from 'react'
 
 export default function Three() {
  
   useEffect(() => {
-    inintThreejs()
+    inintThreeFont()
   }, [])
 
     return (
       <div className="">
-        {/* <canvas id="my-canvas"></canvas> */}
       </div>
     )
 };
