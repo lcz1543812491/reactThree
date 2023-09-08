@@ -28,7 +28,7 @@ export function inintThreeFont() {
   const axisHelper = new THREE.AxesHelper()
   scene.add(axisHelper)
 
-  const render = new THREE.WebGL1Renderer()
+  const render = new THREE.WebGL1Renderer({ antialias:true })
 
   render.setSize(window.innerWidth, window.innerHeight)
 
@@ -50,7 +50,7 @@ export function inintThreeFont() {
       font,
       size: 0.5,
       height: 0.2,
-      curveSegments: 5,
+      curveSegments: 10,
       bevelEnabled: true,
       bevelThickness: 0.03,
       bevelSize: 0.02,
