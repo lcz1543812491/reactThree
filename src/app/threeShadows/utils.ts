@@ -19,16 +19,48 @@ export function inintThreeShadows() {
   const scene = new THREE.Scene()
 
 
-  const ambentLight = new THREE.AmbientLight(0xffffff, 0.5)
+  const ambentLight = new THREE.AmbientLight(0xffffff, 0.2)
   gui.add(ambentLight, 'intensity').min(0).max(1).step(0.001)
 
 
-  const directLight = new THREE.DirectionalLight(0xffffff, 0.8)
+  const directLight = new THREE.DirectionalLight(0xffffff, 0.4)
   directLight.position.set(2, 3, 4)
   directLight.castShadow = true
 
+  directLight.shadow.mapSize.width = 1024
+  directLight.shadow.mapSize.height = 1024
+
+  directLight.shadow.camera.top = 2
+  directLight.shadow.camera.bottom = -2
+  directLight.shadow.camera.left = -2
+  directLight.shadow.camera.right = 2
+
+  directLight.shadow.camera.near = 1
+  directLight.shadow.camera.far = 9
+
+  directLight.shadow.radius = 10
+
+  const directLightShadowHelper = new THREE.CameraHelper( directLight.shadow.camera );
+  directLightShadowHelper.visible = false
+  scene.add(directLightShadowHelper);
+
+  const spotLight = new THREE.SpotLight(0xffffff, 4, 5, Math.PI * 0.4)
+  spotLight.castShadow = true
+  spotLight.shadow.mapSize.width = 1024
+  spotLight.shadow.mapSize.height =  1024
+  spotLight.shadow.camera.fov = 40
+  spotLight.shadow.camera.near = 0.7
+  spotLight.shadow.camera.far = 9
+  spotLight.position.set(0, 3, 2)
+
+
+  const spotLightHelper = new THREE.CameraHelper(spotLight.shadow.camera)
+
   scene.add(ambentLight)
   scene.add(directLight)
+  scene.add(spotLight)
+  scene.add(spotLight.target)
+  scene.add(spotLightHelper)
 
 
   const camera = new THREE.PerspectiveCamera(90, (window as Window).innerWidth / (window as Window).innerHeight)
@@ -41,6 +73,7 @@ export function inintThreeShadows() {
   const render = new THREE.WebGL1Renderer({ antialias:true })
   render.setSize(window.innerWidth, window.innerHeight)
   render.shadowMap.enabled = true
+  render.shadowMap.type = THREE.PCFSoftShadowMap
   document.body.appendChild(render.domElement)
 
 
@@ -49,7 +82,7 @@ export function inintThreeShadows() {
 
 
 
-  const geometry1 = new THREE.SphereGeometry( 0.8, 32, 16 ); 
+  const geometry1 = new THREE.SphereGeometry( 0.8, 64, 32 ); 
   const sphere = new THREE.Mesh( geometry1, common_material );
   sphere.castShadow = true
   sphere.position.y = 1
