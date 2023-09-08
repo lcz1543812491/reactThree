@@ -32,6 +32,17 @@ export function inintThreeLight() {
   const pointLight = new THREE.PointLight( 0xff9000, 2, 1 ); 
   pointLight.position.set( 1, 0.5, 1 ); 
 
+  const rectLight = new THREE.RectAreaLight( 0x4e00ff, 5,  1, 1 );
+  rectLight.position.set( 0, 2, 0 );
+  // rectLight.lookAt( 0, 0, 0 );
+  scene.add( rectLight )
+
+  const spotLight = new THREE.SpotLight( 0x78ff00, 2, 6, Math.PI * 0.2, 0.2, 0 );
+  spotLight.position.set( 0, 2, 3 );
+  spotLight.target.position.x = -1.75
+
+  scene.add(spotLight.target)
+  scene.add(spotLight)
   scene.add(pointLight);
   scene.add(light);
   scene.add(ambentLight)
