@@ -11,18 +11,19 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
 
 export function inintHauntedHouse() {
   const scene = new THREE.Scene()
+  scene.fog = new THREE.Fog('#262837', 1, 15)
 
-  const ambentLight = new THREE.AmbientLight('#b9d5ff', 0.5)
-  const directionalLight = new THREE.DirectionalLight('#b9d5ff', 2)
+  const ambentLight = new THREE.AmbientLight('#b9d5ff', 0.12)
+  const directionalLight = new THREE.DirectionalLight('#b9d5ff', 0.12)
   directionalLight.position.set(4, 5, -2)
 
   scene.add(ambentLight)
   scene.add(directionalLight)
 
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight)
-  camera.position.z = 20
-  camera.position.y = 10
-  camera.position.x = 10
+  camera.position.z = 3
+  camera.position.y = 8
+  camera.position.x = 8
   scene.add(camera)
 
   const axisHelper = new THREE.AxesHelper()
@@ -30,6 +31,11 @@ export function inintHauntedHouse() {
 
   const house = new THREE.Group()
   scene.add(house)
+
+
+  const doorLight = new THREE.PointLight('#ff7d46', 1, 7)
+  doorLight.position.set(0, 2.2, 2.7)
+  house.add(doorLight)
 
   const walls = new THREE.Mesh(new THREE.BoxGeometry(4, 2.5, 4), new THREE.MeshStandardMaterial({ color: '#ac8e82' }))
   walls.position.y = 1.25
@@ -87,6 +93,7 @@ export function inintHauntedHouse() {
 
   const render = new THREE.WebGL1Renderer({ antialias: true })
   render.setSize(window.innerWidth, window.innerHeight)
+  render.setClearColor('#262837')
   document.body.appendChild(render.domElement)
 
   const controls = new OrbitControls(camera, render.domElement)
