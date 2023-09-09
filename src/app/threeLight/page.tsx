@@ -9,7 +9,9 @@ export default function Three() {
     inintThreeLight()
     return () => {
       const canvasTag = document.getElementsByTagName('canvas')
+      const guiElement = document.getElementsByClassName('dg ac')
       document.body.removeChild(canvasTag[0])
+      document.body.removeChild(guiElement[0])
     }
   }, [])
 

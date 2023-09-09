@@ -9,9 +9,9 @@ import font1 from 'three/examples/fonts/helvetiker_regular.typeface.json'
 import { Inter, Roboto_Mono } from 'next/font/google'
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
 
+const gui = new dat.GUI();
 
 export function inintThreeLight() {
-  const gui = new dat.GUI();
 
   const common_material = new THREE.MeshStandardMaterial({color: 0xffffff, side: THREE.DoubleSide})
   common_material.roughness = 0.3
