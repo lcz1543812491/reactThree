@@ -56,11 +56,24 @@ export function inintThreeShadows() {
 
   const spotLightHelper = new THREE.CameraHelper(spotLight.shadow.camera)
 
+
+  const pointLight = new THREE.PointLight( 0xffffff, 2, 100 );
+  pointLight.castShadow = true
+  pointLight.position.set(-3, 2, 1)
+  pointLight.shadow.mapSize.width = 1024
+  pointLight.shadow.mapSize.height = 1024
+  pointLight.shadow.camera.near = 0.4
+  pointLight.shadow.camera.far = 3
+
+  const pointLightShadowHelper = new THREE.CameraHelper(pointLight.shadow.camera)
+
+  scene.add( pointLight );
   scene.add(ambentLight)
   scene.add(directLight)
   scene.add(spotLight)
   scene.add(spotLight.target)
   scene.add(spotLightHelper)
+  scene.add(pointLightShadowHelper)
 
 
   const camera = new THREE.PerspectiveCamera(90, (window as Window).innerWidth / (window as Window).innerHeight)
@@ -92,7 +105,12 @@ export function inintThreeShadows() {
   const plane = new THREE.Mesh( geometry, common_material );
   plane.receiveShadow = true
   plane.rotation.x = Math.PI * 0.5
+  plane.position.y = -0.5
   scene.add( plane );
+
+  console.log(plane.position)
+
+  const clock = new THREE.Clock()
 
 
   window.addEventListener('resize', () => {
@@ -102,6 +120,13 @@ export function inintThreeShadows() {
   })
 
   function tick() {
+
+    const time = clock.getElapsedTime()
+   
+    sphere.position.x = Math.cos(time) * 2
+    sphere.position.z = Math.sin(time) * 2
+    sphere.position.y = Math.abs(Math.sin(time) * 2)
+
     render.render(scene, camera)
     controls.update()
     requestAnimationFrame(tick)
