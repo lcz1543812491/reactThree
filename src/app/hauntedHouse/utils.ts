@@ -11,6 +11,8 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js'
 
 export function inintHauntedHouse() {
   const scene = new THREE.Scene()
+  const textureLoader = new THREE.TextureLoader()
+
   scene.fog = new THREE.Fog('#262837', 1, 15)
 
   const ambentLight = new THREE.AmbientLight('#b9d5ff', 0.12)
@@ -20,10 +22,10 @@ export function inintHauntedHouse() {
   scene.add(ambentLight)
   scene.add(directionalLight)
 
-  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight)
+  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight)
   camera.position.z = 3
-  camera.position.y = 8
-  camera.position.x = 8
+  camera.position.y = 6
+  camera.position.x = -6
   scene.add(camera)
 
   const axisHelper = new THREE.AxesHelper()
@@ -33,11 +35,24 @@ export function inintHauntedHouse() {
   scene.add(house)
 
 
-  const doorLight = new THREE.PointLight('#ff7d46', 1, 7)
+  const doorLight = new THREE.PointLight('#ff7d46', 3, 7)
   doorLight.position.set(0, 2.2, 2.7)
   house.add(doorLight)
 
-  const walls = new THREE.Mesh(new THREE.BoxGeometry(4, 2.5, 4), new THREE.MeshStandardMaterial({ color: '#ac8e82' }))
+
+  const wall_color = textureLoader.load('/texture/hauntedHouse/bricks/color.jpg')
+  const wall_ambient = textureLoader.load('/texture/hauntedHouse/bricks/ambientOcclusion.jpg')
+  const wall_normal = textureLoader.load('/texture/hauntedHouse/bricks/normal.jpg')
+  const wall_roughness = textureLoader.load('/texture/hauntedHouse/bricks/roughness.jpg')
+
+  const walls = new THREE.Mesh(
+    new THREE.BoxGeometry(4, 2.5, 4), 
+    new THREE.MeshStandardMaterial({ 
+      map: wall_color,
+      aoMap: wall_ambient,
+      normalMap: wall_normal,
+      roughnessMap: wall_roughness
+    }))
   walls.position.y = 1.25
   house.add(walls)
 
@@ -46,8 +61,7 @@ export function inintHauntedHouse() {
   roof.rotation.y = Math.PI * 0.25
   house.add(roof)
 
-  const textureLoader = new THREE.TextureLoader()
-
+  
   const door_alpha = textureLoader.load('/texture/hauntedHouse/door/alpha.jpg')
   const door_ambient = textureLoader.load('/texture/hauntedHouse/door/ambientOcclusion.jpg')
   const door_color = textureLoader.load('/texture/hauntedHouse/door/color.jpg')
@@ -109,8 +123,38 @@ export function inintHauntedHouse() {
     graves.add(grave)
   }
 
+  const floor_ambient = textureLoader.load('/texture/hauntedHouse/grass/ambientOcclusion.jpg')
+  const floor_color = textureLoader.load('/texture/hauntedHouse/grass/color.jpg')
+  const floor_normal = textureLoader.load('/texture/hauntedHouse/grass/normal.jpg')
+  const floor_roughness = textureLoader.load('/texture/hauntedHouse/grass/roughness.jpg')
+
+  floor_ambient.repeat.set(8, 8)
+  floor_color.repeat.set(8, 8)
+  floor_normal.repeat.set(8, 8)
+  floor_roughness.repeat.set(8, 8)
+
+  floor_ambient.wrapS = THREE.RepeatWrapping
+  floor_color.wrapS = THREE.RepeatWrapping
+  floor_normal.wrapS = THREE.RepeatWrapping
+  floor_roughness.wrapS = THREE.RepeatWrapping
+
+  floor_ambient.wrapT = THREE.RepeatWrapping
+  floor_color.wrapT = THREE.RepeatWrapping
+  floor_normal.wrapT = THREE.RepeatWrapping
+  floor_roughness.wrapT = THREE.RepeatWrapping
+
+
   const planeGeometry = new THREE.PlaneGeometry(20, 20)
-  const planeMesh = new THREE.Mesh(planeGeometry, new THREE.MeshStandardMaterial({ color: '#a9c388' }))
+  const planeMesh = new THREE.Mesh(planeGeometry, 
+    new THREE.MeshStandardMaterial(
+      { 
+        map: floor_color,
+        aoMap: floor_ambient,
+        normalMap: floor_normal,
+        roughnessMap: floor_roughness
+      }
+      )
+  )
   planeMesh.rotation.x = -Math.PI * 0.5
   planeMesh.position.y = 0
 
