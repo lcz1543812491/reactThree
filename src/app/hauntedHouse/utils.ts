@@ -46,10 +46,35 @@ export function inintHauntedHouse() {
   roof.rotation.y = Math.PI * 0.25
   house.add(roof)
 
+  const textureLoader = new THREE.TextureLoader()
 
-  const door = new THREE.Mesh(new THREE.BoxGeometry(2, 2), new THREE.MeshStandardMaterial({ color: '#aa7b7b' }))
+  const door_alpha = textureLoader.load('/texture/hauntedHouse/door/alpha.jpg')
+  const door_ambient = textureLoader.load('/texture/hauntedHouse/door/ambientOcclusion.jpg')
+  const door_color = textureLoader.load('/texture/hauntedHouse/door/color.jpg')
+  const door_height = textureLoader.load('/texture/hauntedHouse/door/height.jpg')
+  const door_metalness = textureLoader.load('/texture/hauntedHouse/door/metalness.jpg')
+  const door_normal = textureLoader.load('/texture/hauntedHouse/door/normal.jpg')
+  const door_roughness = textureLoader.load('/texture/hauntedHouse/door/roughness.jpg')
+
+
+  const door = new THREE.Mesh(
+    new THREE.PlaneGeometry(2.2, 2.2, 100, 100), 
+    new THREE.MeshStandardMaterial({ 
+      map: door_color,
+      transparent: true,
+      alphaMap: door_alpha,
+      aoMap: door_ambient,
+      displacementMap: door_height,
+      displacementScale: 0.1,
+      normalMap: door_normal,
+      metalnessMap: door_metalness,
+      roughnessMap: door_roughness
+     }))
+
+  //door.geometry.setAttribute('uv2', new THREE.Float32BufferAttribute(door.geometry.attributes.uv.array, 2))   
   door.position.y = 1
-  door.position.z = 1.501
+  door.position.z = 2.001
+
   house.add(door)
 
   const bushmat = new THREE.MeshStandardMaterial({color: '#89c854'})
