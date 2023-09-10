@@ -8,6 +8,7 @@ export default function Home() {
       <Link href="/threeLight" className='text-white'>Light 灯光</Link>
       <Link href="/threeShadows" className='text-white'>Shadows 阴影</Link>
       <Link href="/hauntedHouse" className='text-white'>haunted House</Link>
+      <Link href="/galaxy" className='text-white'>Galaxy</Link>
     </main>
   )
 }
