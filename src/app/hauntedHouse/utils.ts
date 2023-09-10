@@ -13,10 +13,11 @@ export function inintHauntedHouse() {
   const scene = new THREE.Scene()
   const textureLoader = new THREE.TextureLoader()
 
-  scene.fog = new THREE.Fog('#262837', 1, 15)
+  scene.fog = new THREE.Fog('#262837', 1, 25)
 
   const ambentLight = new THREE.AmbientLight('#b9d5ff', 0.12)
-  const directionalLight = new THREE.DirectionalLight('#b9d5ff', 0.12)
+  const directionalLight = new THREE.DirectionalLight('#b9d5ff', 0.3)
+  directionalLight.castShadow = true
   directionalLight.position.set(4, 5, -2)
 
   scene.add(ambentLight)
@@ -37,7 +38,13 @@ export function inintHauntedHouse() {
 
   const doorLight = new THREE.PointLight('#ff7d46', 3, 7)
   doorLight.position.set(0, 2.2, 2.7)
+  doorLight.castShadow = true
   house.add(doorLight)
+
+  const ghost = new THREE.PointLight('#ff00ff', 3, 3)
+  ghost.castShadow = true
+
+  scene.add(ghost)
 
 
   const wall_color = textureLoader.load('/texture/hauntedHouse/bricks/color.jpg')
@@ -54,6 +61,7 @@ export function inintHauntedHouse() {
       roughnessMap: wall_roughness
     }))
   walls.position.y = 1.25
+  walls.castShadow = true
   house.add(walls)
 
   const roof = new THREE.Mesh(new THREE.ConeGeometry(3.5, 1, 4), new THREE.MeshStandardMaterial({color: '#b35f45'}))
@@ -97,10 +105,12 @@ export function inintHauntedHouse() {
   const bush1 = new THREE.Mesh(bushge, bushmat)
   bush1.scale.set(0.5, 0.5, 0.5)
   bush1.position.set(0.8, 0.2, 2.2)
+  bush1.castShadow = true
 
   const bush2 = new THREE.Mesh(bushge, bushmat)
   bush2.scale.set(0.25, 0.25, 0.25)
   bush2.position.set(1.4, 0.1, 2.1)
+  bush2.castShadow = true
 
   house.add(bush1, bush2)
 
@@ -120,6 +130,7 @@ export function inintHauntedHouse() {
     grave.position.set(x, 0, z)
     grave.rotation.y = Math.random()
     grave.rotation.z = (Math.random() - 0.5) * 0.6
+    grave.castShadow = true
     graves.add(grave)
   }
 
@@ -157,12 +168,14 @@ export function inintHauntedHouse() {
   )
   planeMesh.rotation.x = -Math.PI * 0.5
   planeMesh.position.y = 0
+  planeMesh.receiveShadow = true
 
   scene.add(planeMesh)
 
   const render = new THREE.WebGL1Renderer({ antialias: true })
   render.setSize(window.innerWidth, window.innerHeight)
   render.setClearColor('#262837')
+  render.shadowMap.enabled = true
   document.body.appendChild(render.domElement)
 
   const controls = new OrbitControls(camera, render.domElement)
@@ -174,7 +187,17 @@ export function inintHauntedHouse() {
     render.setSize(window.innerWidth, window.innerHeight)
   })
 
+
+  const clock = new THREE.Clock()
+
   function tick() {
+    
+    const time = clock.getElapsedTime() * 0.6
+    ghost.position.x = Math.cos(time) * 6
+    ghost.position.z = Math.sin(time) * 6
+
+    ghost.position.y = Math.abs(Math.sin(time) * 3)
+
     render.render(scene, camera)
     controls.update()
     requestAnimationFrame(tick)
