@@ -15,7 +15,7 @@ export function inintHauntedHouse() {
 
   scene.fog = new THREE.Fog('#262837', 1, 25)
 
-  const ambentLight = new THREE.AmbientLight('#b9d5ff', 0.1)
+  const ambentLight = new THREE.AmbientLight('#b9d5ff', 0.05)
   const directionalLight = new THREE.DirectionalLight('#b9d5ff', 0.1)
   directionalLight.castShadow = true
   directionalLight.position.set(4, 5, -2)
@@ -172,6 +172,7 @@ export function inintHauntedHouse() {
       }
       )
   )
+  planeMesh.geometry.setAttribute('uv2', new THREE.Float32BufferAttribute(planeMesh.geometry.attributes.uv.array, 2))
   planeMesh.rotation.x = -Math.PI * 0.5
   planeMesh.position.y = 0
   planeMesh.receiveShadow = true
