@@ -15,8 +15,8 @@ export function inintHauntedHouse() {
 
   scene.fog = new THREE.Fog('#262837', 1, 25)
 
-  const ambentLight = new THREE.AmbientLight('#b9d5ff', 0.12)
-  const directionalLight = new THREE.DirectionalLight('#b9d5ff', 0.3)
+  const ambentLight = new THREE.AmbientLight('#b9d5ff', 0.1)
+  const directionalLight = new THREE.DirectionalLight('#b9d5ff', 0.1)
   directionalLight.castShadow = true
   directionalLight.position.set(4, 5, -2)
 
@@ -36,13 +36,19 @@ export function inintHauntedHouse() {
   scene.add(house)
 
 
-  const doorLight = new THREE.PointLight('#ff7d46', 3, 7)
+  const doorLight = new THREE.PointLight('#ff7d46', 2, 7)
   doorLight.position.set(0, 2.2, 2.7)
   doorLight.castShadow = true
+  doorLight.shadow.mapSize.width = 256
+  doorLight.shadow.mapSize.height = 256
+  doorLight.shadow.camera.far = 7
   house.add(doorLight)
 
   const ghost = new THREE.PointLight('#ff00ff', 3, 3)
   ghost.castShadow = true
+  ghost.shadow.mapSize.width = 256
+  ghost.shadow.mapSize.height = 256
+  ghost.shadow.camera.far = 7
 
   scene.add(ghost)
 
@@ -176,6 +182,7 @@ export function inintHauntedHouse() {
   render.setSize(window.innerWidth, window.innerHeight)
   render.setClearColor('#262837')
   render.shadowMap.enabled = true
+  render.shadowMap.type = THREE.PCFSoftShadowMap
   document.body.appendChild(render.domElement)
 
   const controls = new OrbitControls(camera, render.domElement)
