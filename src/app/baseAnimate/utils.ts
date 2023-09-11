@@ -77,6 +77,13 @@ export function inintBaseAnimate() {
   mesh2.position.y = - parameter.distance
   mesh3.position.y = - parameter.distance * 2
 
+  mesh1.position.x = 2
+
+  mesh2.position.x = -2
+
+  mesh3.position.x = 2
+
+
   scene.add(mesh1, mesh2, mesh3)
 
 
