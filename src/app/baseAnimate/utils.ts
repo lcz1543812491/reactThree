@@ -26,14 +26,24 @@ export function inintBaseAnimate() {
 
 
   const camera = new THREE.PerspectiveCamera(90, (window as Window).innerWidth / (window as Window).innerHeight)
-  camera.position.z = 4
+  camera.position.z = 7
   scene.add(camera)
 
   const axisHelper = new THREE.AxesHelper()
   scene.add(axisHelper)
 
-  const render = new THREE.WebGL1Renderer({ antialias:true, canvas: document.getElementById('galaxy') as HTMLCanvasElement })
+  const render = new THREE.WebGL1Renderer({ 
+    antialias:true, 
+    canvas: document.getElementById('galaxy') as HTMLCanvasElement,
+    alpha: true 
+  })
   render.setSize(window.innerWidth, window.innerHeight)
+
+  const cube = new THREE.Mesh(
+    new THREE.BoxGeometry(1, 1, 1),
+    new THREE.MeshBasicMaterial({ color: '#ff0000' })
+)
+  scene.add(cube)
 
 
 

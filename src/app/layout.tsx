@@ -16,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className='bg-black'>
+      <body className={inter.className} style={{ background: 'transparent' }}>
       <Link href="/" className='text-white fixed top-5 left-5'>Back to Home</Link>
         {children}
       </body>
