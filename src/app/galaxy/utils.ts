@@ -5,8 +5,13 @@ import * as dat from 'dat.gui'
 
 const gui = new dat.GUI();
 const parameter = {
-    count: 1000,
-    size: 0.02
+    count: 9000,
+    size: 0.02,
+    radius: 5,
+    branches: 3,
+    spin: 1,
+    random: 0.4,
+    randomPower: 6
 }
 
 function createGalaxy(scene: any) {
@@ -16,9 +21,19 @@ function createGalaxy(scene: any) {
 
    for(let i = 0; i < parameter.count; i++){
      const i3 = i *3
-     positions[i3] = (Math.random() - 0.5) * 3
-     positions[i3 + 1] = (Math.random() - 0.5) * 3
-     positions[i3 + 2] = (Math.random() - 0.5) * 3
+     
+     const branch_angle = (i % parameter.branches) / parameter.branches * Math.PI * 2
+     const radius = Math.random() * parameter.radius
+     const spin_angle = radius * parameter.spin
+
+     //console.log('@@@', i, branch_angle)
+     const random_x = Math.pow(Math.random(), parameter.randomPower) * (Math.random() > 0.5 ? 1: -1)
+     const random_y = Math.pow(Math.random(), parameter.randomPower) * (Math.random() > 0.5 ? 1: -1)
+     const random_z = Math.pow(Math.random(), parameter.randomPower) * (Math.random() > 0.5 ? 1: -1)
+
+     positions[i3] = Math.cos(branch_angle + spin_angle) * radius + random_x
+     positions[i3 + 1] = random_y
+     positions[i3 + 2] = Math.sin(branch_angle + spin_angle) * radius + random_z
    }
 
    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
