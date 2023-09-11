@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import gsap from 'gsap'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import * as dat from 'dat.gui'
+import { color } from 'three/examples/jsm/nodes/Nodes.js';
 
 const gui = new dat.GUI();
 const parameter = {
@@ -11,13 +12,19 @@ const parameter = {
     branches: 3,
     spin: 1,
     random: 0.4,
-    randomPower: 6
+    randomPower: 6,
+    insideColor: '#ff6030',
+    outsideColor: '#1b3984'
 }
 
 function createGalaxy(scene: any) {
    const geometry = new THREE.BufferGeometry()
 
    const positions = new Float32Array(parameter.count * 3)
+   const colors = new Float32Array(parameter.count * 3)
+
+   const insideColor = new THREE.Color(parameter.insideColor)
+   const outsideColor = new THREE.Color(parameter.outsideColor)
 
    for(let i = 0; i < parameter.count; i++){
      const i3 = i *3
@@ -34,15 +41,24 @@ function createGalaxy(scene: any) {
      positions[i3] = Math.cos(branch_angle + spin_angle) * radius + random_x
      positions[i3 + 1] = random_y
      positions[i3 + 2] = Math.sin(branch_angle + spin_angle) * radius + random_z
+
+     const mixedColor = insideColor.clone()
+     mixedColor.lerp(outsideColor, radius / parameter.radius)
+
+     colors[i3] = mixedColor.r
+     colors[i3 + 1] = mixedColor.g
+     colors[i3 + 2] = mixedColor.b
    }
 
    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+   geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
 
    const point_material = new THREE.PointsMaterial({
     size: parameter.size, 
     sizeAttenuation: true,
     depthWrite:false,
-    blending: THREE.AdditiveBlending
+    blending: THREE.AdditiveBlending,
+    vertexColors: true
    })
 
    const points = new THREE.Points(geometry, point_material)
