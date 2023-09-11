@@ -9,6 +9,7 @@ export default function Home() {
       <Link href="/threeShadows" className='text-white'>Shadows 阴影</Link>
       <Link href="/hauntedHouse" className='text-white'>haunted House</Link>
       <Link href="/galaxy" className='text-white'>Galaxy</Link>
+      <Link href="/baseAnimate" className='text-white'>Base animate</Link>
     </main>
   )
 }
