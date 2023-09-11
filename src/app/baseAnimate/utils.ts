@@ -6,8 +6,11 @@ import { color } from 'three/examples/jsm/nodes/Nodes.js';
 
 
 const parameter = {
-  color: '#fe99ec'
+  color: '#fe99ec',
+  distance: 6
 }
+
+let scrll_y = window.scrollY
 
 
 
@@ -70,6 +73,10 @@ export function inintBaseAnimate() {
     common_material
   )
 
+  mesh1.position.y = 0
+  mesh2.position.y = - parameter.distance
+  mesh3.position.y = - parameter.distance * 2
+
   scene.add(mesh1, mesh2, mesh3)
 
 
@@ -84,7 +91,28 @@ export function inintBaseAnimate() {
     render.setSize(window.innerWidth, window.innerHeight)
   })
 
+  window.addEventListener('scroll', () => {
+    scrll_y = window.scrollY
+    //console.log('scroll', scrll_y)
+  })
+
+  const clock = new THREE.Clock()
+
   function tick() {
+    
+    const time = clock.getElapsedTime()
+
+    mesh1.rotation.x = time * 0.2
+    mesh1.rotation.y = time * 0.12
+
+    mesh2.rotation.x = time * 0.2
+    mesh2.rotation.y = time * 0.12
+
+    mesh3.rotation.x = time * 0.2
+    mesh3.rotation.y = time * 0.12
+
+    camera.position.y = - (scrll_y / window.innerHeight) * parameter.distance
+
     render.render(scene, camera)
     //controls.update()
     requestAnimationFrame(tick)

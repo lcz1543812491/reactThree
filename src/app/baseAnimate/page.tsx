@@ -10,7 +10,7 @@ export default function Three() {
   }, [])
 
     return (
-      <canvas id="galaxy" style={{width: '100vw', height: '100vh'}}>
+      <canvas id="galaxy" style={{width: '100vw', height: '100vh'}} className='fixed top-0 right-0'>
       </canvas>
     )
 };

@@ -17,7 +17,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className='bg-black'>
-      <body className={inter.className} style={{ background: 'transparent' }}>
+      <body className={inter.className} style={{ background: 'transparent', height: '300vh' }}>
       <Link href="/" className='text-white fixed top-5 left-5'>Back to Home</Link>
         {children}
       </body>
