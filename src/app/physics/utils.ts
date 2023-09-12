@@ -11,16 +11,32 @@ function createCannonWorld(){
   world = new Cannon.World()
   world.gravity.set(0, -9.82, 0)
 
+  const concreteMaterial = new Cannon.Material('concrete')
+  const plasticMaterial = new Cannon.Material('plastic')
+
+  const contactMaterial = new Cannon.ContactMaterial(
+    concreteMaterial, 
+    plasticMaterial, 
+    {
+      friction: 0.3,
+      restitution: 0.8
+    }
+  )
+
+  world.addContactMaterial(contactMaterial)
+
+
   const sphereShape = new Cannon.Sphere(0.5)
   sphereBody = new Cannon.Body({ 
     mass: 1, 
     position: new Cannon.Vec3(0, 3, 0),
-    shape: sphereShape
+    shape: sphereShape,
+    material: plasticMaterial
   })
   world.addBody(sphereBody)
 
   const planeShape = new Cannon.Plane()
-  const planeBody = new Cannon.Body({mass: 0})
+  const planeBody = new Cannon.Body({mass: 0, material: concreteMaterial})
   planeBody.addShape(planeShape)
   planeBody.quaternion.setFromAxisAngle(new Cannon.Vec3(-1, 0, 0), Math.PI * 0.5)
   planeBody.position.y = -0.5
@@ -70,7 +86,10 @@ export function inintPhysics() {
 
 
   const camera = new THREE.PerspectiveCamera(90, (window as Window).innerWidth / (window as Window).innerHeight)
-  camera.position.z = 4
+  // camera.position.z = 4
+  // camera.position.y = 6
+  // camera.rotation.x = Math.PI * 0.5
+  camera.position.set(-5, 4, 3)
   scene.add(camera)
 
   const axisHelper = new THREE.AxesHelper()
@@ -126,6 +145,8 @@ export function inintPhysics() {
     sphere.position.x = sphereBody.position.x
     sphere.position.y = sphereBody.position.y
     sphere.position.z = sphereBody.position.z
+
+    //console.log(camera.position)
 
     render.render(scene, camera)
     controls.update()
