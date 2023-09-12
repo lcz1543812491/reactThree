@@ -17,6 +17,30 @@ const cursor = {
   y:0
 }
 
+const star_count = 800
+const radius = 10
+
+function creatStar(scene: any){
+  const positions = new Float32Array(star_count * 3)
+  for(let i = 0; i < star_count; i++ ){
+    positions[i * 3] = (Math.random() - 0.5) * radius
+    positions[i * 3 + 1] = (Math.random() - 0.5) * radius * parameter.distance
+    positions[i * 3 + 2] = (Math.random() - 0.5) * radius 
+  }
+
+  const star_ge = new THREE.BufferGeometry()
+  star_ge.setAttribute('position', new THREE.BufferAttribute(positions, 3))
+
+  const star_mat = new THREE.PointsMaterial({
+    color: 0xffffff,
+    sizeAttenuation: true,
+    size: 0.03
+  })
+
+  const star_mesh = new THREE.Points(star_ge, star_mat)
+  scene.add(star_mesh)
+}
+
 export function inintBaseAnimate() {
 
   const common_material = new THREE.MeshStandardMaterial(
@@ -34,6 +58,7 @@ export function inintBaseAnimate() {
 //   })
 
   const scene = new THREE.Scene()
+  creatStar(scene)
 
   const ambentLight = new THREE.AmbientLight(0xffffff, 0.5)
   scene.add(ambentLight)
