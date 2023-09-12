@@ -12,7 +12,10 @@ const parameter = {
 
 let scrll_y = window.scrollY
 
-
+const cursor = {
+  x:0,
+  y:0
+}
 
 export function inintBaseAnimate() {
 
@@ -43,10 +46,12 @@ export function inintBaseAnimate() {
   const directionalLightCamera = new THREE.CameraHelper(directLight.shadow.camera)
   // scene.add(directionalLightCamera)
 
+  const cameraGroup = new THREE.Group()
 
   const camera = new THREE.PerspectiveCamera(60, (window as Window).innerWidth / (window as Window).innerHeight)
   camera.position.z = 7
-  scene.add(camera)
+  cameraGroup.add(camera)
+  scene.add(cameraGroup)
 
   const axisHelper = new THREE.AxesHelper()
   scene.add(axisHelper)
@@ -98,16 +103,27 @@ export function inintBaseAnimate() {
     render.setSize(window.innerWidth, window.innerHeight)
   })
 
+  window.addEventListener('mousemove', (e) => {
+    cursor.x = e.clientX / window.innerWidth - 0.5
+    cursor.y = e.clientY / window.innerHeight - 0.5
+    // console.log('@@@', cursor)
+  })
+
   window.addEventListener('scroll', () => {
     scrll_y = window.scrollY
     //console.log('scroll', scrll_y)
   })
 
   const clock = new THREE.Clock()
+  let prev_time = 0
 
   function tick() {
     
     const time = clock.getElapsedTime()
+
+    const delta_time = time - prev_time
+    prev_time = time
+    //console.log('delta_time', delta_time)
 
     mesh1.rotation.x = time * 0.2
     mesh1.rotation.y = time * 0.12
@@ -119,6 +135,11 @@ export function inintBaseAnimate() {
     mesh3.rotation.y = time * 0.12
 
     camera.position.y = - (scrll_y / window.innerHeight) * parameter.distance
+
+    
+
+    cameraGroup.position.y += (cursor.y - cameraGroup.position.y) * 5 * delta_time
+    cameraGroup.position.x += (cursor.x - cameraGroup.position.x) * 5 * delta_time
 
     render.render(scene, camera)
     //controls.update()
