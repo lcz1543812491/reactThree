@@ -1,12 +1,12 @@
 'use client'
 
-// import { inintPhysics } from './utils';
+import { inintPhysics } from './utils';
 import { useEffect } from 'react'
 
 export default function Three() {
  
   useEffect(() => {
-    // inintPhysics()
+    inintPhysics()
   }, [])
 
     return (
