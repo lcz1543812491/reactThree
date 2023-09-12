@@ -2,8 +2,23 @@ import * as THREE from 'three'
 import gsap from 'gsap'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import * as dat from 'dat.gui'
-import * as cannon from 'cannon'
+import * as Cannon from 'cannon'
 
+let world: any
+let sphereBody: any
+
+function createCannonWorld(){
+  world = new Cannon.World()
+  world.gravity.set(0, -9.82, 0)
+
+  const sphereShape = new Cannon.Sphere(0.5)
+  sphereBody = new Cannon.Body({ 
+    mass: 1, 
+    position: new Cannon.Vec3(0, 3, 0),
+    shape: sphereShape
+  })
+  world.addBody(sphereBody)
+}
 
 
 export function inintPhysics() {
@@ -82,10 +97,6 @@ export function inintPhysics() {
   plane.position.y = -0.5
   scene.add( plane );
 
-  console.log(plane.position)
-
-  const clock = new THREE.Clock()
-
 
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight
@@ -93,9 +104,21 @@ export function inintPhysics() {
     render.setSize(window.innerWidth, window.innerHeight)
   })
 
+  const clock = new THREE.Clock()
+  let prevTime = 0
+
+  createCannonWorld()
+
   function tick() {
 
-    const time = clock.getElapsedTime()
+    const time = clock.getElapsedTime();
+    const deltaTime = time - prevTime;
+    prevTime = time;
+    
+    (world as any).step( 1/ 60, deltaTime, 3)
+    sphere.position.x = sphereBody.position.x
+    sphere.position.y = sphereBody.position.y
+    sphere.position.z = sphereBody.position.z
 
     render.render(scene, camera)
     controls.update()
