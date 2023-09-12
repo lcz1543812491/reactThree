@@ -17,6 +17,9 @@ dependencies:
   autoprefixer:
     specifier: 10.4.15
     version: registry.npmmirror.com/autoprefixer@10.4.15(postcss@8.4.29)
+  cannon:
+    specifier: ^0.6.2
+    version: registry.npmmirror.com/cannon@0.6.2
   dat.gui:
     specifier: ^0.7.9
     version: registry.npmmirror.com/dat.gui@0.7.9
@@ -55,6 +58,9 @@ devDependencies:
   '@types/dat.gui':
     specifier: 0.7.7
     version: registry.npmmirror.com/@types/dat.gui@0.7.7
+  '@types/jsdom':
+    specifier: ^16.2.15
+    version: registry.npmmirror.com/@types/jsdom@16.2.15
   '@types/three':
     specifier: ^0.155.1
     version: registry.npmmirror.com/@types/three@0.155.1
@@ -369,6 +375,16 @@ packages:
     version: 0.7.7
     dev: true
 
+  registry.npmmirror.com/@types/jsdom@16.2.15:
+    resolution: {integrity: sha512-nwF87yjBKuX/roqGYerZZM0Nv1pZDMAT5YhOHYeM/72Fic+VEqJh4nyoqoapzJnW3pUlfxPY5FhgsJtM+dRnQQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/jsdom/-/jsdom-16.2.15.tgz}
+    name: '@types/jsdom'
+    version: 16.2.15
+    dependencies:
+      '@types/node': registry.npmmirror.com/@types/node@20.5.9
+      '@types/parse5': registry.npmmirror.com/@types/parse5@6.0.3
+      '@types/tough-cookie': registry.npmmirror.com/@types/tough-cookie@4.0.2
+    dev: true
+
   registry.npmmirror.com/@types/json5@0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/json5/-/json5-0.0.29.tgz}
     name: '@types/json5'
@@ -379,7 +395,12 @@ packages:
     resolution: {integrity: sha512-PcGNd//40kHAS3sTlzKB9C9XL4K0sTup8nbG5lC14kzEteTNuAFh9u5nA0o5TWnSG2r/JNPRXFVcHJIIeRlmqQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/node/-/node-20.5.9.tgz}
     name: '@types/node'
     version: 20.5.9
-    dev: false
+
+  registry.npmmirror.com/@types/parse5@6.0.3:
+    resolution: {integrity: sha512-SuT16Q1K51EAVPz1K29DJ/sXjhSQ0zjvsypYJ6tlwVsRV9jwW5Adq2ch8Dq8kDBCkYnELS7N7VNCSB5nC56t/g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/parse5/-/parse5-6.0.3.tgz}
+    name: '@types/parse5'
+    version: 6.0.3
+    dev: true
 
   registry.npmmirror.com/@types/prop-types@15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/prop-types/-/prop-types-15.7.5.tgz}
@@ -428,6 +449,12 @@ packages:
       fflate: registry.npmmirror.com/fflate@0.6.10
       lil-gui: registry.npmmirror.com/lil-gui@0.17.0
       meshoptimizer: registry.npmmirror.com/meshoptimizer@0.18.1
+    dev: true
+
+  registry.npmmirror.com/@types/tough-cookie@4.0.2:
+    resolution: {integrity: sha512-Q5vtl1W5ue16D+nIaW8JWebSSraJVlK+EthKn7e7UcD4KWsaSJ8BqGPXNaPghgtcn/fhvrN17Tv8ksUsQpiplw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/tough-cookie/-/tough-cookie-4.0.2.tgz}
+    name: '@types/tough-cookie'
+    version: 4.0.2
     dev: true
 
   registry.npmmirror.com/@types/webxr@0.5.4:
@@ -820,6 +847,12 @@ packages:
     resolution: {integrity: sha512-YkJi7RwPgWtXVSgK4lG9AHH57nSzvvOp9MesgXmw4Q7n0C3H04L0foHqfxcmSAm5AcWb8dW9AYj2tR7/5GnddQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/caniuse-lite/-/caniuse-lite-1.0.30001527.tgz}
     name: caniuse-lite
     version: 1.0.30001527
+    dev: false
+
+  registry.npmmirror.com/cannon@0.6.2:
+    resolution: {integrity: sha512-n/7wWSXr8KOSvjad2x0fJHgpMepKjOKi+NdSnjfYyijoDBZnp4JQKgPcpv28jlXoWM+N9zVYU09J0A6Qxx+Y7w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/cannon/-/cannon-0.6.2.tgz}
+    name: cannon
+    version: 0.6.2
     dev: false
 
   registry.npmmirror.com/chalk@4.1.2:

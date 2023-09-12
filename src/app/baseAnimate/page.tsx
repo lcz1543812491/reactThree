@@ -6,6 +6,7 @@ import { useEffect } from 'react'
 export default function Three() {
   useEffect(() => {
     inintBaseAnimate()
+    //console.log('@@@',  document.body.style)
   }, [])
 
   return (
