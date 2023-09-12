@@ -18,6 +18,13 @@ function createCannonWorld(){
     shape: sphereShape
   })
   world.addBody(sphereBody)
+
+  const planeShape = new Cannon.Plane()
+  const planeBody = new Cannon.Body({mass: 0})
+  planeBody.addShape(planeShape)
+  planeBody.quaternion.setFromAxisAngle(new Cannon.Vec3(-1, 0, 0), Math.PI * 0.5)
+  planeBody.position.y = -0.5
+  world.addBody(planeBody)
 }
 
 
