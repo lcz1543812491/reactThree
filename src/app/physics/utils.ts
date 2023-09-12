@@ -29,7 +29,7 @@ function createCannonWorld(){
   const sphereShape = new Cannon.Sphere(0.5)
   sphereBody = new Cannon.Body({ 
     mass: 1, 
-    position: new Cannon.Vec3(0, 3, 0),
+    position: new Cannon.Vec3(0, 6, 0),
     shape: sphereShape,
     material: plasticMaterial
   })
