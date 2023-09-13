@@ -9,58 +9,56 @@ interface CreateSphereProps {
   scene: any
   radius: number
   position: { x: number; y: number; z: number }
-  plasticMaterial: Cannon.Material
-  concreteMaterial: Cannon.Material
 }
 
-let sphereBody: any
-let sphere: any
+
+const objectArr = [] as any[]
+// let sphereBody: any
+// let sphere: any 
 
 function createSphere(props: CreateSphereProps) {
-  const { world, scene, radius, position, plasticMaterial, concreteMaterial } = props
+  const { world, scene, radius, position } = props
 
   const geometry1 = new THREE.SphereGeometry(radius, 128, 64)
-  sphere = new THREE.Mesh(geometry1, new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.3, roughness: 0.5 }))
+  const sphere = new THREE.Mesh(geometry1, new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.3, roughness: 0.5 }))
   sphere.castShadow = true
   sphere.position.copy(position as THREE.Vector3)
   scene.add(sphere)
 
   const sphereShape = new Cannon.Sphere(radius)
-  sphereBody = new Cannon.Body({
+  const sphereBody = new Cannon.Body({
     mass: 1,
     shape: sphereShape,
-    material: plasticMaterial
   })
-  sphereBody.position.copy(position)
+  sphereBody.position.copy(position as any)
 
   sphereBody.applyLocalForce(new Cannon.Vec3(150, 0, 0), new Cannon.Vec3(0, 0, 0))
 
   world.addBody(sphereBody)
 
   const planeShape = new Cannon.Plane()
-  const planeBody = new Cannon.Body({ mass: 0, material: concreteMaterial })
+  const planeBody = new Cannon.Body({ mass: 0 })
   planeBody.addShape(planeShape)
   planeBody.quaternion.setFromAxisAngle(new Cannon.Vec3(-1, 0, 0), Math.PI * 0.5)
   planeBody.position.y = -0.5
   world.addBody(planeBody)
+  objectArr.push({sphere, sphereBody})
 }
 
 export function inintPhysics() {
-  // const gui = new dat.GUI();
+  const gui = new dat.GUI()
   const world = new Cannon.World()
   world.gravity.set(0, -9.82, 0)
 
-  const concreteMaterial = new Cannon.Material('concrete')
-  const plasticMaterial = new Cannon.Material('plastic')
+  const defaultMaterial = new Cannon.Material('default')
 
-  const contactMaterial = new Cannon.ContactMaterial(concreteMaterial, plasticMaterial, {
+  const contactMaterial = new Cannon.ContactMaterial(defaultMaterial, defaultMaterial, {
     friction: 0.3,
     restitution: 0.8
   })
 
   world.addContactMaterial(contactMaterial)
-
-
+  world.defaultContactMaterial = contactMaterial
 
   const common_material = new THREE.MeshStandardMaterial({ color: 0xffffff, side: THREE.DoubleSide })
   common_material.roughness = 0.3
@@ -76,10 +74,10 @@ export function inintPhysics() {
   directLight.shadow.mapSize.width = 1024
   directLight.shadow.mapSize.height = 1024
 
-  directLight.shadow.camera.top = 2
-  directLight.shadow.camera.bottom = -2
-  directLight.shadow.camera.left = -2
-  directLight.shadow.camera.right = 2
+  directLight.shadow.camera.top = 4
+  directLight.shadow.camera.bottom = -4
+  directLight.shadow.camera.left = -4
+  directLight.shadow.camera.right = 4
 
   directLight.shadow.camera.near = 1
   directLight.shadow.camera.far = 9
@@ -93,9 +91,6 @@ export function inintPhysics() {
   scene.add(directLightHelper)
   scene.add(ambentLight)
   scene.add(directLight)
-
-
-
 
   const camera = new THREE.PerspectiveCamera(90, (window as Window).innerWidth / (window as Window).innerHeight)
 
@@ -134,27 +129,45 @@ export function inintPhysics() {
   let prevTime = 0
 
   createSphere({
-    world, 
-    scene, 
-    radius: 0.5, 
-    position: { x: 0, y: 6, z: 0 }, 
-    plasticMaterial, 
-    concreteMaterial
+    world,
+    scene,
+    radius: 0.5,
+    position: { x: 0, y: 6, z: 0 },
   })
+
+  const addSphere = {
+    addSphere: () =>
+      createSphere({
+        world,
+        scene,
+        radius: 0.5,
+        position: { x: 0, y: 6, z: 0 },
+      })
+  }
+
+  gui.add(addSphere, 'addSphere')
 
   function tick() {
     const time = clock.getElapsedTime()
     const deltaTime = time - prevTime
-    prevTime = time
+    prevTime = time;
 
     //console.log('sphereBody', sphereBody);
-    if (sphereBody) {
-      sphereBody.applyForce(new Cannon.Vec3(-0.5, 0, 0), sphereBody.position)
-    }
+    // if (sphereBody) {
+    //   sphereBody.applyForce(new Cannon.Vec3(-0.5, 0, 0), sphereBody.position)
+    // }
 
     (world as any).step(1 / 60, deltaTime, 3)
-    sphere.position.copy(sphereBody.position)
 
+    // sphere.position.copy(sphereBody.position)
+
+    if(objectArr.length > 0){
+      objectArr.forEach((item) => {
+        // console.log('objectArr', item)
+        item.sphere.position.copy(item.sphereBody.position)
+        item.sphereBody.applyForce(new Cannon.Vec3(-0.5, 0, 0), item.sphereBody.position)
+      })
+    }
 
     render.render(scene, camera)
     controls.update()
