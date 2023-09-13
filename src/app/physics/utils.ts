@@ -140,8 +140,8 @@ export function inintPhysics() {
       createSphere({
         world,
         scene,
-        radius: 0.5,
-        position: { x: 0, y: 6, z: 0 },
+        radius: Math.random() * 0.8,
+        position: { x: (Math.random() - 0.5) * 6, y: 6, z: (Math.random() - 0.5) * 6 },
       })
   }
 
