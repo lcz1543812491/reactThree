@@ -6,8 +6,9 @@ import * as Cannon from 'cannon'
 
 let world: any
 let sphereBody: any
+let sphere: any
 
-function createCannonWorld(){
+function createCannonWorldAndSphere(scene: any, radius: number, position: { x: number; y:number; z:number }){
   world = new Cannon.World()
   world.gravity.set(0, -9.82, 0)
 
@@ -25,14 +26,26 @@ function createCannonWorld(){
 
   world.addContactMaterial(contactMaterial)
 
+  const geometry1 = new THREE.SphereGeometry( radius, 128, 64 ); 
+  sphere = new THREE.Mesh( 
+    geometry1, 
+    new THREE.MeshStandardMaterial({color: 0xffffff, metalness: 0.3, roughness: 0.5}) 
+  );
+  sphere.castShadow = true
+  sphere.position.copy(position as THREE.Vector3)
+  scene.add(sphere)
 
-  const sphereShape = new Cannon.Sphere(0.5)
+
+  const sphereShape = new Cannon.Sphere(radius)
   sphereBody = new Cannon.Body({ 
     mass: 1, 
-    position: new Cannon.Vec3(0, 6, 0),
     shape: sphereShape,
     material: plasticMaterial
   })
+  sphereBody.position.copy(position)
+
+  sphereBody.applyLocalForce(new Cannon.Vec3(150, 0, 0), new Cannon.Vec3(0,0,0))
+
   world.addBody(sphereBody)
 
   const planeShape = new Cannon.Plane()
@@ -110,11 +123,6 @@ export function inintPhysics() {
 
 
 
-  const geometry1 = new THREE.SphereGeometry( 0.5, 128, 64 ); 
-  const sphere = new THREE.Mesh( geometry1, common_material );
-  sphere.castShadow = true
-//   sphere.position.y = 1
-  scene.add(sphere)
 
   const geometry = new THREE.PlaneGeometry( 10, 10 );
   const plane = new THREE.Mesh( geometry, common_material );
@@ -133,7 +141,7 @@ export function inintPhysics() {
   const clock = new THREE.Clock()
   let prevTime = 0
 
-  createCannonWorld()
+  createCannonWorldAndSphere(scene, 0.5, { x: 0, y:6, z:0 })
 
   function tick() {
 
@@ -141,6 +149,11 @@ export function inintPhysics() {
     const deltaTime = time - prevTime;
     prevTime = time;
     
+    //console.log('sphereBody', sphereBody);
+    if(sphereBody){
+      sphereBody.applyForce(new Cannon.Vec3(-0.5, 0, 0), sphereBody.position)
+    }
+   
     (world as any).step( 1/ 60, deltaTime, 3)
     sphere.position.x = sphereBody.position.x
     sphere.position.y = sphereBody.position.y
