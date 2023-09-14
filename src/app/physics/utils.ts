@@ -11,14 +11,46 @@ interface CreateSphereProps {
   position: { x: number; y: number; z: number }
 }
 
+interface createBoxProps extends Pick<CreateSphereProps, 'world' | 'scene' | 'position'> {
+  width: number;
+  height: number;
+  depth: number
+}
+
 
 const objectArr = [] as any[]
+let gui: dat.GUI
 // let sphereBody: any
 // let sphere: any 
 
+function createBox(props: createBoxProps){
+  const { world, scene, position, width, height, depth } = props
+  const geometry1 = new THREE.BoxGeometry(width, height, depth)
+  const box = new THREE.Mesh(
+    geometry1, 
+    new THREE.MeshStandardMaterial({
+      color: 0xffffff, 
+      metalness: 0.6, 
+      roughness: 0.5
+    })
+  )
+
+  box.castShadow = true
+  box.position.copy(position as THREE.Vector3)
+  scene.add(box)
+
+
+  const boxShape = new Cannon.Box(new Cannon.Vec3( width * 0.5, height * 0.5, depth * 0.5 ))
+  const boxBody = new Cannon.Body({mass: 1, shape: boxShape})
+  boxBody.position.copy(position as any)
+  world.addBody(boxBody)
+
+  objectArr.push({sphere: box, sphereBody: boxBody})
+}
+
 function createSphere(props: CreateSphereProps) {
   const { world, scene, radius, position } = props
-
+ 
   const geometry1 = new THREE.SphereGeometry(radius, 128, 64)
   const sphere = new THREE.Mesh(geometry1, new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.3, roughness: 0.5 }))
   sphere.castShadow = true
@@ -36,25 +68,27 @@ function createSphere(props: CreateSphereProps) {
 
   world.addBody(sphereBody)
 
+
+  objectArr.push({sphere, sphereBody})
+}
+
+export function inintPhysics() {
+  
+  const world = new Cannon.World()
+  world.gravity.set(0, -9.82, 0)
+
   const planeShape = new Cannon.Plane()
   const planeBody = new Cannon.Body({ mass: 0 })
   planeBody.addShape(planeShape)
   planeBody.quaternion.setFromAxisAngle(new Cannon.Vec3(-1, 0, 0), Math.PI * 0.5)
   planeBody.position.y = -0.5
   world.addBody(planeBody)
-  objectArr.push({sphere, sphereBody})
-}
-
-export function inintPhysics() {
-  const gui = new dat.GUI()
-  const world = new Cannon.World()
-  world.gravity.set(0, -9.82, 0)
 
   const defaultMaterial = new Cannon.Material('default')
 
   const contactMaterial = new Cannon.ContactMaterial(defaultMaterial, defaultMaterial, {
     friction: 0.3,
-    restitution: 0.8
+    restitution: 0.5
   })
 
   world.addContactMaterial(contactMaterial)
@@ -145,7 +179,23 @@ export function inintPhysics() {
       })
   }
 
-  gui.add(addSphere, 'addSphere')
+  const addBox = {
+    addBox: () =>
+      createBox({
+        world,
+        scene,
+        width: Math.random(),
+        height: Math.random(),
+        depth: Math.random(),
+        position: { x: (Math.random() - 0.5) * 6, y: 6, z: (Math.random() - 0.5) * 6 },
+      })
+  }
+
+  if(!gui){
+    gui = new dat.GUI()
+    gui.add(addSphere, 'addSphere')
+    gui.add(addBox, 'addBox')
+  }
 
   function tick() {
     const time = clock.getElapsedTime()
@@ -165,6 +215,7 @@ export function inintPhysics() {
       objectArr.forEach((item) => {
         // console.log('objectArr', item)
         item.sphere.position.copy(item.sphereBody.position)
+        item.sphere.quaternion.copy(item.sphereBody.quaternion)
         item.sphereBody.applyForce(new Cannon.Vec3(-0.5, 0, 0), item.sphereBody.position)
       })
     }
