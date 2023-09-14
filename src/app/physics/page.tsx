@@ -1,16 +1,22 @@
 'use client'
-
-import { inintPhysics } from './utils';
-import { useEffect } from 'react'
+import { inintPhysics } from './utils'
+import { SeverPhysics } from './severPhysics'
+import { useEffect, useRef } from 'react'
 
 export default function Three() {
- 
+  const audio = useRef(null)
+
   useEffect(() => {
-    inintPhysics()
+    inintPhysics(audio)
   }, [])
 
-    return (
-      <canvas id="galaxy" style={{width: '100vw', height: '100vh', background: 'black'}}>
-      </canvas>
-    )
-};
+  return (
+    <div>
+      {/* <canvas id="galaxy" style={{ width: '100vw', height: '100vh', background: 'black' }}></canvas>
+      <audio ref={audio} controls src="/physics/hit.mp3" style={{ position: 'fixed', zIndex: 100 }}>
+        audio
+      </audio> */}
+      <SeverPhysics ref={audio} />
+    </div>
+  )
+}

@@ -10,7 +10,7 @@ const parameter = {
   distance: 6
 }
 
-let scrll_y = window.scrollY
+let scrll_y = window? window.scrollY: 0
 
 const cursor = {
   x:0,
@@ -73,6 +73,7 @@ export function inintBaseAnimate() {
 
   const cameraGroup = new THREE.Group()
 
+  
   const camera = new THREE.PerspectiveCamera(60, (window as Window).innerWidth / (window as Window).innerHeight)
   camera.position.z = 7
   cameraGroup.add(camera)

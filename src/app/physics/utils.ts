@@ -8,10 +8,11 @@ interface CreateSphereProps {
   world: any
   scene: any
   radius: number
-  position: { x: number; y: number; z: number }
+  position: { x: number; y: number; z: number },
+  audio: HTMLAudioElement
 }
 
-interface createBoxProps extends Pick<CreateSphereProps, 'world' | 'scene' | 'position'> {
+interface createBoxProps extends Pick<CreateSphereProps, 'world' | 'scene' | 'position'| 'audio'> {
   width: number;
   height: number;
   depth: number
@@ -24,7 +25,7 @@ let gui: dat.GUI
 // let sphere: any 
 
 function createBox(props: createBoxProps){
-  const { world, scene, position, width, height, depth } = props
+  const { world, scene, position, width, height, depth, audio } = props
   const geometry1 = new THREE.BoxGeometry(width, height, depth)
   const box = new THREE.Mesh(
     geometry1, 
@@ -43,13 +44,14 @@ function createBox(props: createBoxProps){
   const boxShape = new Cannon.Box(new Cannon.Vec3( width * 0.5, height * 0.5, depth * 0.5 ))
   const boxBody = new Cannon.Body({mass: 1, shape: boxShape})
   boxBody.position.copy(position as any)
+  boxBody.addEventListener('collide', audio.play)
   world.addBody(boxBody)
 
   objectArr.push({sphere: box, sphereBody: boxBody})
 }
 
 function createSphere(props: CreateSphereProps) {
-  const { world, scene, radius, position } = props
+  const { world, scene, radius, position, audio } = props
  
   const geometry1 = new THREE.SphereGeometry(radius, 128, 64)
   const sphere = new THREE.Mesh(geometry1, new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.3, roughness: 0.5 }))
@@ -65,6 +67,7 @@ function createSphere(props: CreateSphereProps) {
   sphereBody.position.copy(position as any)
 
   sphereBody.applyLocalForce(new Cannon.Vec3(150, 0, 0), new Cannon.Vec3(0, 0, 0))
+  sphereBody.addEventListener('collide', audio.play)
 
   world.addBody(sphereBody)
 
@@ -72,9 +75,17 @@ function createSphere(props: CreateSphereProps) {
   objectArr.push({sphere, sphereBody})
 }
 
-export function inintPhysics() {
-  
+export function inintPhysics(audioRef: any) {
+  // console.log('audioRef', audioRef.current.children[1].play)
+  // audioRef.current.children[1].play()
+
+  const audio = new Audio('/physics/hit.mp3')
+  console.log('audio', audio.play)
+  audio.play()
+
   const world = new Cannon.World()
+  world.broadphase = new Cannon.SAPBroadphase(world)
+  world.allowSleep = true
   world.gravity.set(0, -9.82, 0)
 
   const planeShape = new Cannon.Plane()
@@ -167,6 +178,7 @@ export function inintPhysics() {
     scene,
     radius: 0.5,
     position: { x: 0, y: 6, z: 0 },
+    audio
   })
 
   const addSphere = {
@@ -176,6 +188,7 @@ export function inintPhysics() {
         scene,
         radius: Math.random() * 0.8,
         position: { x: (Math.random() - 0.5) * 6, y: 6, z: (Math.random() - 0.5) * 6 },
+        audio
       })
   }
 
@@ -188,6 +201,7 @@ export function inintPhysics() {
         height: Math.random(),
         depth: Math.random(),
         position: { x: (Math.random() - 0.5) * 6, y: 6, z: (Math.random() - 0.5) * 6 },
+        audio
       })
   }
 
