@@ -44,7 +44,7 @@ function createBox(props: createBoxProps){
   const boxShape = new Cannon.Box(new Cannon.Vec3( width * 0.5, height * 0.5, depth * 0.5 ))
   const boxBody = new Cannon.Body({mass: 1, shape: boxShape})
   boxBody.position.copy(position as any)
-  boxBody.addEventListener('collide', audio.play)
+  boxBody.addEventListener('collide', audio.play.bind(audio))
   world.addBody(boxBody)
 
   objectArr.push({sphere: box, sphereBody: boxBody})
@@ -67,7 +67,7 @@ function createSphere(props: CreateSphereProps) {
   sphereBody.position.copy(position as any)
 
   sphereBody.applyLocalForce(new Cannon.Vec3(150, 0, 0), new Cannon.Vec3(0, 0, 0))
-  sphereBody.addEventListener('collide', audio.play)
+  sphereBody.addEventListener('collide', audio.play.bind(audio))
 
   world.addBody(sphereBody)
 
@@ -81,7 +81,7 @@ export function inintPhysics(audioRef: any) {
 
   const audio = new Audio('/physics/hit.mp3')
   console.log('audio', audio.play)
-  audio.play()
+  audio.play.call(audio)
 
   const world = new Cannon.World()
   world.broadphase = new Cannon.SAPBroadphase(world)
