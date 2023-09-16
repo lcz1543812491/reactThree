@@ -1,7 +1,6 @@
 import * as THREE from 'three'
 import gsap from 'gsap'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import * as dat from 'dat.gui'
 import * as Cannon from 'cannon'
 
 interface CreateSphereProps {
@@ -88,7 +87,7 @@ function createSphere(props: CreateSphereProps) {
 export function inintPhysics(audioRef: any) {
   // console.log('audioRef', audioRef.current.children[1].play)
   // audioRef.current.children[1].play()
-
+  
   const audio = new Audio('/physics/hit.mp3')
   console.log('audio', audio.play)
   audio.play.call(audio)
@@ -215,11 +214,11 @@ export function inintPhysics(audioRef: any) {
       })
   }
 
-  if(!gui){
-    gui = new dat.GUI()
-    gui.add(addSphere, 'addSphere')
-    gui.add(addBox, 'addBox')
-  }
+  // if(!gui){
+  //   gui = new dat.GUI()
+  //   gui.add(addSphere, 'addSphere')
+  //   gui.add(addBox, 'addBox')
+  // }
 
   function tick() {
     const time = clock.getElapsedTime()
