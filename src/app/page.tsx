@@ -11,6 +11,7 @@ export default function Home() {
       <Link href="/galaxy" className='text-white'>Galaxy</Link>
       <Link href="/baseAnimate" className='text-white'>Base animate</Link>
       <Link href="/physics" className='text-white'>Physics</Link>
+      <Link href="/model" className='text-white'>Model</Link>
     </main>
   )
 }
