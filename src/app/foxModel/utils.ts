@@ -19,7 +19,7 @@ export function inintModel() {
   scene.add(directionalLight)
 
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight)
-  camera.position.set(1, 1, 1)
+  camera.position.set(2, 2, 4)
 
   scene.add(camera)
 
@@ -43,14 +43,20 @@ export function inintModel() {
   const gltfLoader = new GLTFLoader()
   gltfLoader.setDRACOLoader(loader)
 
-  
-  gltfLoader.load('/model/Duck/glTF-Draco/Duck.gltf', (model) => {
+  let mixer = null as unknown as THREE.AnimationMixer
+
+  gltfLoader.load('/model/Fox/glTF/Fox.gltf', (model) => {
      console.log('model', model)
-     model.scene.scale.set(2, 2, 2)
-     const children = [...model.scene.children]
-     for(let i = 0; i < children.length; i++ ){
-        scene.add(children[i])
-     }
+     model.scene.scale.set(0.025, 0.025, 0.025)
+     mixer = new THREE.AnimationMixer(model.scene)
+     const action = mixer.clipAction(model.animations[2])
+     action.play()
+     scene.add(model.scene)
+    
+    //  const children = [...model.scene.children]
+    //  for(let i = 0; i < children.length; i++ ){
+    //     scene.add(children[i])
+    //  }
   })
 
   
@@ -69,8 +75,18 @@ export function inintModel() {
     render.setSize(window.innerWidth, window.innerHeight)
   })
 
+  const clock = new THREE.Clock()
+  let pre_time = 0
+
   function tick() {
-    // console.log(camera.position)
+    // console.log(camera.position) 
+    const current_time = clock.getElapsedTime()
+    const delta_time = current_time - pre_time
+    pre_time = current_time
+
+    if(!!mixer){
+      mixer.update(delta_time)
+    }
     render.render(scene, camera)
     controls.update()
     requestAnimationFrame(tick)
