@@ -8,9 +8,10 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 export function inintModel() {
   const scene = new THREE.Scene()
 
-  const ambentLight = new THREE.AmbientLight(0xffffff, 0.4)
+  const ambentLight = new THREE.AmbientLight(0xffffff, 0.1)
   const directionalLight = new THREE.DirectionalLight(0xffffff, 1)
-  directionalLight.position.set(4, 0, 0)
+  directionalLight.castShadow = true
+  directionalLight.position.set(4, 2, 2)
 
   const directionalLightHelper = new THREE.DirectionalLightHelper( directionalLight, 5 );
 
@@ -30,12 +31,13 @@ export function inintModel() {
   const planeGeometry = new THREE.PlaneGeometry(20, 20)
   const planeMaterial = new THREE.MeshStandardMaterial({
         color: 0xffffff, 
-        roughness: 0.3, 
-        metalness: 0.3
+        roughness: 1, 
+        metalness: 0.1
     })
 
   const plane = new THREE.Mesh(planeGeometry, planeMaterial)
   plane.rotation.x = - Math.PI * 0.5
+  plane.receiveShadow = true
   scene.add(plane)
 
   const loader = new DRACOLoader();
@@ -47,6 +49,7 @@ export function inintModel() {
 
   gltfLoader.load('/model/Fox/glTF/Fox.gltf', (model) => {
      console.log('model', model)
+     model.scene.castShadow = true
      model.scene.scale.set(0.025, 0.025, 0.025)
      mixer = new THREE.AnimationMixer(model.scene)
      const action = mixer.clipAction(model.animations[2])
@@ -62,7 +65,8 @@ export function inintModel() {
   
 
   const render = new THREE.WebGL1Renderer({ antialias:true, canvas: document.getElementById('galaxy') as HTMLCanvasElement })
-
+  render.shadowMap.enabled = true
+  render.shadowMap.type = THREE.PCFSoftShadowMap
   render.setSize(window.innerWidth, window.innerHeight)
 
 
