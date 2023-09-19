@@ -12,6 +12,7 @@ export default function Home() {
       <Link href="/baseAnimate" className='text-white'>Base animate</Link>
       <Link href="/physics" className='text-white'>Physics</Link>
       <Link href="/foxModel" className='text-white'>Model</Link>
+      <Link href="/realisticRender" className='text-white'>Realistic Render</Link>
     </main>
   )
 }
