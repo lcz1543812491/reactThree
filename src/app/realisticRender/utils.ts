@@ -77,15 +77,6 @@ export function realisticRender() {
 
   const gltfLoader = new GLTFLoader()
 
-  gltfLoader.load('/model/FlightHelmet/glTF/FlightHelmet.gltf', (model) => {
-    model.scene.scale.set(10, 10, 10)
-    model.scene.position.set(0, -4, 0)
-    scene.add(model.scene)
-    if(gui){
-        gui.add(model.scene.rotation, 'y').min(-Math.PI).max(Math.PI).step(0.01)
-    }
-  })
-
   const cubeTextureLoader = new THREE.CubeTextureLoader()
   const environmentMap = cubeTextureLoader.load([
     '/environmentMaps/0/px.jpg', 
@@ -98,6 +89,24 @@ export function realisticRender() {
 
   scene.background = environmentMap
  
+
+  gltfLoader.load('/model/FlightHelmet/glTF/FlightHelmet.gltf', (model) => {
+    model.scene.scale.set(10, 10, 10)
+    model.scene.position.set(0, -4, 0)
+    scene.add(model.scene)
+    if(gui){
+        gui.add(model.scene.rotation, 'y').min(-Math.PI).max(Math.PI).step(0.01)
+    }
+    scene.traverse((child) => {
+        if((child as THREE.Mesh).material instanceof THREE.MeshStandardMaterial){
+            (child as any).material.envMap = environmentMap;
+            (child as any).material.envMapIntensity = 3
+            // console.log(child)
+        }
+    })
+  })
+
+
 
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight
