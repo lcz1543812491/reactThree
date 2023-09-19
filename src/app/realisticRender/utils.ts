@@ -85,6 +85,18 @@ export function realisticRender() {
         gui.add(model.scene.rotation, 'y').min(-Math.PI).max(Math.PI).step(0.01)
     }
   })
+
+  const cubeTextureLoader = new THREE.CubeTextureLoader()
+  const environmentMap = cubeTextureLoader.load([
+    '/environmentMaps/0/px.jpg', 
+    '/environmentMaps/0/nx.jpg', 
+    '/environmentMaps/0/py.jpg', 
+    '/environmentMaps/0/ny.jpg', 
+    '/environmentMaps/0/pz.jpg', 
+    '/environmentMaps/0/nz.jpg', 
+  ])
+
+  scene.background = environmentMap
  
 
   window.addEventListener('resize', () => {
