@@ -23,12 +23,12 @@ export function realisticRender() {
   directLight.shadow.camera.right = 2
 
   directLight.shadow.camera.near = 1
-  directLight.shadow.camera.far = 9
+  directLight.shadow.camera.far = 15
 
   directLight.shadow.radius = 10
 
   const directLightShadowHelper = new THREE.CameraHelper( directLight.shadow.camera );
-  directLightShadowHelper.visible = false
+  directLightShadowHelper.visible = true
   scene.add(directLightShadowHelper);
 
   const guiElements = document.getElementsByClassName('dg ac')
@@ -65,6 +65,9 @@ export function realisticRender() {
   render.setSize(window.innerWidth, window.innerHeight)
   render.shadowMap.enabled = true
   render.shadowMap.type = THREE.PCFSoftShadowMap
+  render.outputColorSpace = THREE.SRGBColorSpace
+  render.toneMapping = THREE.ACESFilmicToneMapping
+  render.toneMappingExposure = 2
   // render.physicallyCorrectLights = true
   // console.log('render', render.physicallyCorrectLights)
 
@@ -87,7 +90,9 @@ export function realisticRender() {
     '/environmentMaps/0/nz.jpg', 
   ])
 
+  environmentMap.colorSpace = THREE.SRGBColorSpace
   scene.background = environmentMap
+  scene.environment = environmentMap
  
 
   gltfLoader.load('/model/FlightHelmet/glTF/FlightHelmet.gltf', (model) => {
@@ -99,8 +104,10 @@ export function realisticRender() {
     }
     scene.traverse((child) => {
         if((child as THREE.Mesh).material instanceof THREE.MeshStandardMaterial){
-            (child as any).material.envMap = environmentMap;
+            // (child as any).material.envMap = environmentMap;
             (child as any).material.envMapIntensity = 3
+            child.castShadow = true
+            child.receiveShadow = true
             // console.log(child)
         }
     })
