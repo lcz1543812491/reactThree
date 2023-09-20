@@ -5,7 +5,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import testVertexShader from '@/app/shader/shader/verticxShader.glsl'
 // @ts-ignore
 import testFragmentShader from './shader/fragment.glsl'
-console.log('testVertexShader', testVertexShader)
+// console.log('testVertexShader', testVertexShader)
+// console.log('testFragmentShader', testFragmentShader)
 
 export function initShader() {
 
@@ -61,7 +62,15 @@ export function initShader() {
 
 
   const clock = new THREE.Clock()
+  const material = new THREE.RawShaderMaterial(
+    {
+      vertexShader: testVertexShader,
+      fragmentShader: testFragmentShader,
+    }
+  )
 
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 32, 32), material)
+  scene.add(mesh)
 
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight
