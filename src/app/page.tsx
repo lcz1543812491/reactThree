@@ -13,6 +13,7 @@ export default function Home() {
       <Link href="/physics" className='text-white'>Physics</Link>
       <Link href="/foxModel" className='text-white'>Model</Link>
       <Link href="/realisticRender" className='text-white'>Realistic Render</Link>
+      <Link href="/shader" className='text-white'>Shader</Link>
     </main>
   )
 }

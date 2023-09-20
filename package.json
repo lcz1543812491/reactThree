@@ -24,7 +24,8 @@
     "typescript": "5.2.2",
     "gsap": "^3.12.2",
     "dat.gui": "^0.7.9",
-    "cannon": "^0.6.2"
+    "cannon": "^0.6.2",
+    "ts-shader-loader": "^2.0.2"
   },
   "devDependencies": {
     "@types/three": "^0.155.1",
