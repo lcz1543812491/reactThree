@@ -62,12 +62,14 @@ export function initShader() {
 
 
   const clock = new THREE.Clock()
+
   const material = new THREE.ShaderMaterial(
     {
       vertexShader: testVertexShader,
       fragmentShader: testFragmentShader,
       uniforms:{
-        color: { value: new THREE.Color('#ffffff') }
+        color: { value: new THREE.Color('#ff0000') },
+        time: { value: 0 }
       }
     }
   )
@@ -83,6 +85,8 @@ export function initShader() {
 
   function tick() {
     const time = clock.getElapsedTime()
+    material.uniforms.time.value = time
+
     render.render(scene, camera)
     controls.update()
     requestAnimationFrame(tick)
