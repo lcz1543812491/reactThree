@@ -13,7 +13,7 @@
 module.exports = {
   webpack: (config, { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }) => {
     // Important: return the modified config
-    console.log('config', config.resolve.extensions)
+    //console.log('config', config.resolve.extensions)
     config.resolve.extensions.push('glsl')
     config.module.rules.push({
       test: /\.(glsl|vs|fs)$/,

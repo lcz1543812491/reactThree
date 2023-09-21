@@ -14,6 +14,7 @@ export default function Home() {
       <Link href="/foxModel" className='text-white'>Model</Link>
       <Link href="/realisticRender" className='text-white'>Realistic Render</Link>
       <Link href="/shader" className='text-white'>Shader</Link>
+      <Link href="/shaderDemo" className='text-white'>Shader Demo</Link>
     </main>
   )
 }
