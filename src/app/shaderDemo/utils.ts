@@ -5,10 +5,17 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import testVertexShader from './shader/verticxShader.glsl'
 // @ts-ignore
 import testFragmentShader from './shader/fragment.glsl'
+// @ts-ignore
+// import glsl from 'glslify'
 // console.log('testVertexShader', testVertexShader)
 // console.log('testFragmentShader', testFragmentShader)
 
 export function initShader() {
+
+  // const glsl = require('glslify')
+  // const noise = require('glsl-noise/simplex/3d.glsl');
+  // console.log('glsl', glsl)
+  //console.log('noise', noise)
 
   const scene = new THREE.Scene()
 
@@ -61,20 +68,18 @@ export function initShader() {
   controls.enableDamping = true
 
 
-  const clock = new THREE.Clock()
-
   const material = new THREE.ShaderMaterial(
     {
       vertexShader: testVertexShader,
       fragmentShader: testFragmentShader,
       uniforms:{
         color: { value: new THREE.Color('#ff0000') },
-        time: { value: 0 }
+        time: { value: 0 },
       }
     }
   )
 
-  const mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), material)
+  const mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), material)
   scene.add(mesh)
 
   window.addEventListener('resize', () => {
@@ -83,8 +88,14 @@ export function initShader() {
     render.setSize(window.innerWidth, window.innerHeight)
   })
 
+  const clock = new THREE.Clock()
+  let pre_time = 0
+
   function tick() {
     const time = clock.getElapsedTime()
+    // const delta_time = time - pre_time
+    // pre_time = time
+
     material.uniforms.time.value = time
 
     render.render(scene, camera)
