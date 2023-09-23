@@ -41,8 +41,8 @@ export function initShader() {
 
 
 
-  const camera = new THREE.PerspectiveCamera(90, (window as Window).innerWidth / (window as Window).innerHeight)
-  camera.position.z = 4
+  const camera = new THREE.PerspectiveCamera(45, (window as Window).innerWidth / (window as Window).innerHeight)
+  camera.position.z = 2
   scene.add(camera)
 
   const axisHelper = new THREE.AxesHelper()
@@ -66,10 +66,25 @@ export function initShader() {
     {
       vertexShader: testVertexShader,
       fragmentShader: testFragmentShader,
+      uniforms: {
+        frequency: { value: new THREE.Vector2(10, 30) },
+        aTime: { value: 0 }
+      }
     }
   )
 
-  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1, 32, 32), material)
+  const planeGeometry = new THREE.PlaneGeometry(1, 1, 32, 32)
+  console.log('planeGeometry', planeGeometry.attributes.position.count)
+  const count = planeGeometry.attributes.position.count
+  const randoms = new Float32Array(count)
+  for(let i = 0; i < count; i++){
+    randoms[i] = Math.random()
+  }
+
+  // console.log('randoms', randoms)
+  planeGeometry.setAttribute('myRandom', new THREE.Float32BufferAttribute(randoms, 1))
+
+  const mesh = new THREE.Mesh(planeGeometry, material)
   scene.add(mesh)
 
   window.addEventListener('resize', () => {
@@ -80,6 +95,8 @@ export function initShader() {
 
   function tick() {
     const time = clock.getElapsedTime()
+    material.uniforms.aTime.value = time
+    
     render.render(scene, camera)
     controls.update()
     requestAnimationFrame(tick)
