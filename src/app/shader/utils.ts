@@ -62,13 +62,18 @@ export function initShader() {
 
 
   const clock = new THREE.Clock()
+
+  const textureLoader = new THREE.TextureLoader()
+  const flag_texture = textureLoader.load('/shader/flag-french.jpg')
+
   const material = new THREE.RawShaderMaterial(
     {
       vertexShader: testVertexShader,
       fragmentShader: testFragmentShader,
       uniforms: {
-        frequency: { value: new THREE.Vector2(10, 30) },
-        aTime: { value: 0 }
+        frequency: { value: new THREE.Vector2(5, 10) },
+        aTime: { value: 0 },
+        texture: { value: flag_texture }
       }
     }
   )
@@ -85,6 +90,7 @@ export function initShader() {
   planeGeometry.setAttribute('myRandom', new THREE.Float32BufferAttribute(randoms, 1))
 
   const mesh = new THREE.Mesh(planeGeometry, material)
+  mesh.scale.y = 2/3
   scene.add(mesh)
 
   window.addEventListener('resize', () => {
@@ -96,7 +102,7 @@ export function initShader() {
   function tick() {
     const time = clock.getElapsedTime()
     material.uniforms.aTime.value = time
-    
+
     render.render(scene, camera)
     controls.update()
     requestAnimationFrame(tick)
