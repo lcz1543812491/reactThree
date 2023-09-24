@@ -15,6 +15,7 @@ export default function Home() {
       <Link href="/realisticRender" className='text-white'>Realistic Render</Link>
       <Link href="/shader" className='text-white'>Shader</Link>
       <Link href="/shaderDemo" className='text-white'>Shader Demo</Link>
+      <Link href="/shaderPattern1" className='text-white'>shader Pattern 1</Link>
     </main>
   )
 }
