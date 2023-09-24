@@ -69,7 +69,7 @@ export function initShader() {
     }
   )
 
-  const planeGeometry = new THREE.PlaneGeometry(1, 1, 32, 32)
+  const planeGeometry = new THREE.PlaneGeometry(1, 1, 128, 128)
 
   const mesh = new THREE.Mesh(planeGeometry, material)
   scene.add(mesh)
