@@ -108,7 +108,7 @@ void main()
                      waveProps;
 
   for(float i = 0.0; i <= 3.0; i++ ){
-   waveElation -= abs(cnoise(vec3(modelPosition.xz * 7.0 * i, time * 0.2)) * 0.15); 
+   waveElation -= abs(cnoise(vec3(modelPosition.xz * 7.0 * i, time * 0.2)) * 0.15 / 1.5); 
   }
 
                

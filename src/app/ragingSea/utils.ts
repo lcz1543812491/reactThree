@@ -106,7 +106,7 @@ export function initShader() {
   }
 
 
-  const planeGeometry = new THREE.PlaneGeometry(1, 1, 128, 128)
+  const planeGeometry = new THREE.PlaneGeometry(1, 1, 512, 512)
 
   const mesh = new THREE.Mesh(planeGeometry, material)
   mesh.rotation.x = -Math.PI * 0.5
