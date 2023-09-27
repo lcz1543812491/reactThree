@@ -9,6 +9,7 @@ import testFragmentShader from './shader/fragment.glsl'
 export function initShader() {
 
   const scene = new THREE.Scene()
+  const dat = require('dat.gui')
 
 
   const ambentLight = new THREE.AmbientLight(0xffffff, 0.2)
@@ -67,10 +68,24 @@ export function initShader() {
       vertexShader: testVertexShader,
       fragmentShader: testFragmentShader,
       uniforms: {
-        waveProps: {value: 0.2}
+        time: { value: 0 },
+        waveSpeed: { value: 0.75 },
+        waveProps: {value: 0.2},
+        frequencyProps: { value: new THREE.Vector2(4.0, 1.5) }
       }
     }
   )
+
+
+  const guiElements = document.getElementsByClassName('dg ac')
+  if(guiElements.length === 0){
+    const gui = new dat.GUI();
+    gui.add(material.uniforms.waveProps, 'value').min(0.0).max(1.0).step(0.01).name('wave')
+    gui.add(material.uniforms.frequencyProps.value, 'x').min(1.0).max(10.0).step(0.01).name('frequencyX')
+    gui.add(material.uniforms.frequencyProps.value, 'y').min(1.0).max(10.0).step(0.01).name('frequencyY')
+    gui.add(material.uniforms.waveSpeed, 'value').min(0.0).max(10.0).step(0.01).name('waveSpeed')
+  }
+
 
   const planeGeometry = new THREE.PlaneGeometry(1, 1, 128, 128)
 
@@ -86,6 +101,7 @@ export function initShader() {
 
   function tick() {
     const time = clock.getElapsedTime()
+    material.uniforms.time.value = time
 
     render.render(scene, camera)
     controls.update()
