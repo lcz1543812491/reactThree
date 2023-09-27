@@ -40,7 +40,7 @@ export function initShader() {
 
 
   const camera = new THREE.PerspectiveCamera(45, (window as Window).innerWidth / (window as Window).innerHeight)
-  camera.position.z = 2
+  camera.position.set(-0.6, 1.0, 1.6)
   scene.add(camera)
 
   const axisHelper = new THREE.AxesHelper()
@@ -66,12 +66,16 @@ export function initShader() {
     {
       vertexShader: testVertexShader,
       fragmentShader: testFragmentShader,
+      uniforms: {
+        waveProps: {value: 0.2}
+      }
     }
   )
 
   const planeGeometry = new THREE.PlaneGeometry(1, 1, 128, 128)
 
   const mesh = new THREE.Mesh(planeGeometry, material)
+  mesh.rotation.x = -Math.PI * 0.5
   scene.add(mesh)
 
   window.addEventListener('resize', () => {
