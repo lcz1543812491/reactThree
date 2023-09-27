@@ -6,9 +6,12 @@ uniform sampler2D texture;
 
 varying vec2  vuv;
 
+uniform vec3 deepColor;
+uniform vec3 surfaceColor;
+
 
 
 void main()
 {
-    gl_FragColor = vec4(vec3(0.5, 0.8, 1.0), 1.0);
+    gl_FragColor = vec4(deepColor, 1.0);
 }

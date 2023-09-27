@@ -62,6 +62,11 @@ export function initShader() {
 
   const clock = new THREE.Clock()
 
+  const debugColor = {
+    deepColor: '#0000ff',
+    surfaceColor: '#8888ff'
+  }
+
 
   const material = new THREE.ShaderMaterial(
     {
@@ -71,7 +76,9 @@ export function initShader() {
         time: { value: 0 },
         waveSpeed: { value: 0.75 },
         waveProps: {value: 0.2},
-        frequencyProps: { value: new THREE.Vector2(4.0, 1.5) }
+        frequencyProps: { value: new THREE.Vector2(4.0, 1.5) },
+        deepColor: { value: new THREE.Color(debugColor.deepColor) },
+        surfaceColor: { value: new THREE.Color(debugColor.surfaceColor) }
       }
     }
   )
@@ -84,6 +91,13 @@ export function initShader() {
     gui.add(material.uniforms.frequencyProps.value, 'x').min(1.0).max(10.0).step(0.01).name('frequencyX')
     gui.add(material.uniforms.frequencyProps.value, 'y').min(1.0).max(10.0).step(0.01).name('frequencyY')
     gui.add(material.uniforms.waveSpeed, 'value').min(0.0).max(10.0).step(0.01).name('waveSpeed')
+    gui.addColor(debugColor, 'deepColor').name('deepColor').onChange(() => {
+        material.uniforms.deepColor.value = new THREE.Color(debugColor.deepColor)
+    })
+
+    gui.addColor(debugColor, 'surfaceColor').name('surfaceColor').onChange(() => {
+        material.uniforms.surfaceColor.value = new THREE.Color(debugColor.surfaceColor)
+    })
   }
 
 
