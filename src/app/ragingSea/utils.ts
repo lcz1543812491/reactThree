@@ -63,8 +63,8 @@ export function initShader() {
   const clock = new THREE.Clock()
 
   const debugColor = {
-    deepColor: '#0000ff',
-    surfaceColor: '#8888ff'
+    deepColor: '#186691',
+    surfaceColor: '#9bd8ff'
   }
 
 
@@ -78,7 +78,9 @@ export function initShader() {
         waveProps: {value: 0.2},
         frequencyProps: { value: new THREE.Vector2(4.0, 1.5) },
         deepColor: { value: new THREE.Color(debugColor.deepColor) },
-        surfaceColor: { value: new THREE.Color(debugColor.surfaceColor) }
+        surfaceColor: { value: new THREE.Color(debugColor.surfaceColor) },
+        colorOffset: { value: 0.08 },
+        colorMultiple: { value: 5.0 }
       }
     }
   )
@@ -98,6 +100,9 @@ export function initShader() {
     gui.addColor(debugColor, 'surfaceColor').name('surfaceColor').onChange(() => {
         material.uniforms.surfaceColor.value = new THREE.Color(debugColor.surfaceColor)
     })
+
+    gui.add(material.uniforms.colorOffset, 'value').min(0.0).max(10.0).step(0.01).name('colorOffset')
+    gui.add(material.uniforms.colorMultiple, 'value').min(1.0).max(10.0).step(0.01).name('colorMultiple')
   }
 
 

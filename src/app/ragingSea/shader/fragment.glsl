@@ -9,9 +9,19 @@ varying vec2  vuv;
 uniform vec3 deepColor;
 uniform vec3 surfaceColor;
 
+varying float wave;
+
+uniform float colorOffset;
+uniform float colorMultiple;
+
 
 
 void main()
 {
-    gl_FragColor = vec4(deepColor, 1.0);
+   
+    float strength = (wave + colorOffset) * colorMultiple;
+
+    vec3 color = mix(deepColor, surfaceColor, strength);
+
+    gl_FragColor = vec4(color, 1.0);
 }
