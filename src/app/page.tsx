@@ -16,6 +16,7 @@ export default function Home() {
       <Link href="/shader" className='text-white'>Shader</Link>
       <Link href="/shaderDemo" className='text-white'>Shader Demo</Link>
       <Link href="/shaderPattern1" className='text-white'>shader Pattern 1</Link>
+      <Link href="/ragingSea" className='text-white'>Raging Sea</Link>
     </main>
   )
 }
