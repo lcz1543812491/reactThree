@@ -85,6 +85,32 @@ export function realisticRender() {
     normalMap: normalTexture
   })  
 
+  const customTime = {
+    uTime: {value: 0}
+  }
+
+  material.onBeforeCompile = (shader) => {
+    console.log('onBeforeCompile', shader.vertexShader)
+    shader.uniforms.uTime = customTime.uTime
+
+    shader.vertexShader = shader.vertexShader.replace('#include <common>', 
+    ` #include <common>
+      uniform float uTime;
+
+    mat2 rotate2d(float _angle){
+        return mat2(cos(_angle),-sin(_angle),sin(_angle),cos(_angle));
+     }
+      `)
+
+
+      shader.vertexShader = shader.vertexShader.replace('#include <begin_vertex>', `
+        
+      #include <begin_vertex>
+
+      transformed.xz = rotate2d((position.y + uTime) * 0.9) * transformed.xz;
+      `)
+  }
+
   gltfLoader.load('/model/LeePerrySmith/LeePerrySmith.glb', model => {
     const mesh = model.scene.children[0]
     mesh.rotation.y = Math.PI * 0.5;
@@ -104,6 +130,7 @@ export function realisticRender() {
 
   function tick() {
     const time = clock.getElapsedTime()
+    customTime.uTime.value = time
 
     render.render(scene, camera)
     controls.update()
