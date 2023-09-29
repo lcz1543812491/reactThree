@@ -2,6 +2,8 @@ import { secureHeapUsed } from 'crypto'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
+
 
 export function initPerformance() {
   const scene = new THREE.Scene()
@@ -38,9 +40,6 @@ export function initPerformance() {
   const axisHelper = new THREE.AxesHelper()
   scene.add(axisHelper)
 
-
-
-
   const cube = new THREE.Mesh(new THREE.BoxGeometry(2, 2, 2), new THREE.MeshStandardMaterial({ roughness: 0.3, metalness: 0.4 }))
   cube.castShadow = true
   cube.receiveShadow = true
@@ -67,6 +66,31 @@ export function initPerformance() {
   planeMesh.rotation.x = -Math.PI * 0.5
   scene.add(planeMesh)
 
+
+  const geometrys = [] as any[]
+
+  for (let i = 0; i < 50; i++) {
+    const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
+    geometry.translate( 
+        (Math.random() - 0.5) * 10,  
+        (Math.random() - 0.5) * 10,  
+        (Math.random() - 0.5) * 10)
+
+    geometry.rotateX((Math.random() - 0.5) * Math.PI * 2)
+    geometry.rotateY((Math.random() - 0.5) * Math.PI * 2)
+    
+    geometrys.push(geometry)
+  }
+
+  const mergedGeometrys = BufferGeometryUtils.mergeGeometries(geometrys)
+
+  const material = new THREE.MeshNormalMaterial()
+
+  const mesh = new THREE.Mesh(mergedGeometrys, material)
+  scene.add(mesh)
+
+
+
   const render = new THREE.WebGLRenderer({ antialias: true, canvas: document.getElementById('galaxy') as HTMLCanvasElement })
   render.setSize(window.innerWidth, window.innerHeight)
   render.shadowMap.enabled = true
@@ -88,6 +112,8 @@ export function initPerformance() {
 
   function tick() {
     const time = clock.getElapsedTime()
+    torusKnot.rotation.y = time
+    cube.rotation.x = time
     //console.log(camera.position)
     render.render(scene, camera)
     controls.update()
