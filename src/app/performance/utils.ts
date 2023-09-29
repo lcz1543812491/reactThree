@@ -2,8 +2,7 @@ import { secureHeapUsed } from 'crypto'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
-
+import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 
 export function initPerformance() {
   const scene = new THREE.Scene()
@@ -66,30 +65,47 @@ export function initPerformance() {
   planeMesh.rotation.x = -Math.PI * 0.5
   scene.add(planeMesh)
 
+  //   const geometrys = [] as any[]
+  //   for (let i = 0; i < 50; i++) {
+  //     const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
+  //     geometry.translate(
+  //         (Math.random() - 0.5) * 10,
+  //         (Math.random() - 0.5) * 10,
+  //         (Math.random() - 0.5) * 10)
 
-  const geometrys = [] as any[]
+  //     geometry.rotateX((Math.random() - 0.5) * Math.PI * 2)
+  //     geometry.rotateY((Math.random() - 0.5) * Math.PI * 2)
 
-  for (let i = 0; i < 50; i++) {
-    const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
-    geometry.translate( 
-        (Math.random() - 0.5) * 10,  
-        (Math.random() - 0.5) * 10,  
-        (Math.random() - 0.5) * 10)
+  //     geometrys.push(geometry)
+  //   }
+  //   const mergedGeometrys = BufferGeometryUtils.mergeGeometries(geometrys)
+  //   const material = new THREE.MeshNormalMaterial()
+  //   const mesh = new THREE.Mesh(mergedGeometrys, material)
+  //   scene.add(mesh)
 
-    geometry.rotateX((Math.random() - 0.5) * Math.PI * 2)
-    geometry.rotateY((Math.random() - 0.5) * Math.PI * 2)
-    
-    geometrys.push(geometry)
-  }
-
-  const mergedGeometrys = BufferGeometryUtils.mergeGeometries(geometrys)
-
+  const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
   const material = new THREE.MeshNormalMaterial()
 
-  const mesh = new THREE.Mesh(mergedGeometrys, material)
+  const mesh = new THREE.InstancedMesh(geometry, material, 50)
   scene.add(mesh)
 
+  for (let i = 0; i < 50; i++) {
+   const quaternion = new THREE.Quaternion()
+   const position = new THREE.Vector3(
+    (Math.random() - 0.5) * 10,
+    (Math.random() - 0.5) * 10,
+    (Math.random() - 0.5) * 10
+   )
 
+   quaternion.setFromEuler(
+    new THREE.Euler((Math.random() - 0.5) * Math.PI * 2, (Math.random() - 0.5) * Math.PI * 2, 0)
+   )
+
+    const matrix = new THREE.Matrix4()
+    matrix.makeRotationFromQuaternion(quaternion)
+    matrix.setPosition(position)
+    mesh.setMatrixAt(i, matrix)
+  }
 
   const render = new THREE.WebGLRenderer({ antialias: true, canvas: document.getElementById('galaxy') as HTMLCanvasElement })
   render.setSize(window.innerWidth, window.innerHeight)
