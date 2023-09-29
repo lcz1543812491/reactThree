@@ -49,6 +49,9 @@ export default function Home() {
         <Link href="/modifiedMaterials" className="text-white">
           Modified Materials
         </Link>
+        <Link href="/performance" className="text-white">
+          Performance
+        </Link>
       </main>
     </main>
   )
