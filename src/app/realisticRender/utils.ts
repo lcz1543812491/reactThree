@@ -5,10 +5,9 @@ import { mod } from 'three/examples/jsm/nodes/Nodes.js';
 import { gsap } from 'gsap'
 
 
-export function realisticRender() {
+export function realisticRender(setLoading: (res: number) => {}) {
   let gui: any;
   const scene = new THREE.Scene()
-
 
   const ambentLight = new THREE.AmbientLight(0xffffff, 0.2)
   const directLight = new THREE.DirectionalLight(0xffffff, 1)
@@ -100,12 +99,13 @@ export function realisticRender() {
 
   const cubeTextureLoader = new THREE.CubeTextureLoader(loadingManager)
 
-  // loadingManager.onProgress = (value) => {
-  //   console.log('value', value)
-  // }
+  loadingManager.onProgress = (_, loaded, toatal) => {
+    // console.log('value', loaded, toatal)
+    setLoading(loaded / toatal)
+  }
 
   loadingManager.onLoad = () => {
-    console.log('onLoad')
+    // console.log('onLoad')
     gsap.to(planeMaterial.uniforms.uAlpha, { duration: 2, value: 0 })
 
     const guiElements = document.getElementsByClassName('dg ac')
