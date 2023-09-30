@@ -1,7 +1,12 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { mod } from 'three/examples/jsm/nodes/Nodes.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { DotScreenPass } from 'three/examples/jsm/postprocessing/DotScreenPass.js'
+import { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass.js'
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
+import { RGBShiftShader } from 'three/examples/jsm/shaders/RGBShiftShader.js'
 import { gsap } from 'gsap'
 
 
@@ -28,7 +33,7 @@ export function realisticRender(setLoading: (res: number) => {}) {
   directLight.shadow.radius = 10
 
   const directLightShadowHelper = new THREE.CameraHelper( directLight.shadow.camera );
-  directLightShadowHelper.visible = true
+  directLightShadowHelper.visible = false
   scene.add(directLightShadowHelper);
 
 
@@ -83,8 +88,38 @@ export function realisticRender(setLoading: (res: number) => {}) {
   render.outputColorSpace = THREE.SRGBColorSpace
   render.toneMapping = THREE.ACESFilmicToneMapping
   render.toneMappingExposure = 2
+  render.setPixelRatio(Math.min(window.devicePixelRatio, 2))
   // render.physicallyCorrectLights = true
   // console.log('render', render.physicallyCorrectLights)
+
+  const renderTarget = new THREE.WebGLRenderTarget(100, 100, {
+    minFilter: THREE.LinearFilter,
+    magFilter: THREE.LinearFilter,
+    format: THREE.RGBAFormat,
+    encoding: THREE.SRGBColorSpace as any
+  })
+
+  const effectComposer = new EffectComposer(render, renderTarget)
+  effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+  effectComposer.setSize(window.innerWidth, window.innerHeight)
+
+  const renderPass = new RenderPass(scene, camera)
+  effectComposer.addPass(renderPass)
+  
+  const dotScreenPass = new DotScreenPass()
+  dotScreenPass.enabled = false
+  effectComposer.addPass(dotScreenPass)
+
+  const glitchPass = new GlitchPass()
+  glitchPass.goWild = false
+  glitchPass.enabled = false
+  effectComposer.addPass(glitchPass)
+
+
+  // RGB Shift pass
+  const rgbShiftPass = new ShaderPass(RGBShiftShader)
+  rgbShiftPass.enabled = false
+  effectComposer.addPass(rgbShiftPass)
 
 
   const controls = new OrbitControls(camera, render.domElement)
@@ -162,7 +197,8 @@ export function realisticRender(setLoading: (res: number) => {}) {
 
   function tick() {
     // const time = clock.getElapsedTime()
-    render.render(scene, camera)
+    // render.render(scene, camera)
+    effectComposer.render()
     controls.update()
     requestAnimationFrame(tick)
   }
