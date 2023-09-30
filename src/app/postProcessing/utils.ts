@@ -127,6 +127,43 @@ export function realisticRender(setLoading: (res: number) => {}) {
   // effectComposer.addPass(smaaPass)
 
 
+
+  const TintShader = {
+    uniforms:
+    {
+        tDiffuse: { value: null },
+        uTint: { value: null }
+    },
+    vertexShader: `
+        varying vec2 vUv;
+
+        void main()
+        {
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+
+            vUv = uv;
+        }
+    `,
+    fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform vec3 uTint;
+
+        varying vec2 vUv;
+
+        void main()
+        {
+            vec4 color = texture2D(tDiffuse, vUv);
+            color.rgb += uTint;
+
+            gl_FragColor = color;
+        }
+    `
+ }
+ const tintPass = new ShaderPass(TintShader)
+ tintPass.material.uniforms.uTint.value = new THREE.Vector3()
+ effectComposer.addPass(tintPass)
+
+
   const controls = new OrbitControls(camera, render.domElement)
   controls.enableDamping = true
 
@@ -157,6 +194,10 @@ export function realisticRender(setLoading: (res: number) => {}) {
       gui.add(directLight.position, 'x').min(-5).max(5).name('x')
       gui.add(directLight.position, 'y').min(-5).max(5).name('y')
       gui.add(directLight.position, 'z').min(-5).max(5).name('z')
+
+      gui.add(tintPass.material.uniforms.uTint.value, 'x').min(- 1).max(1).step(0.001).name('red')
+      gui.add(tintPass.material.uniforms.uTint.value, 'y').min(- 1).max(1).step(0.001).name('green')
+      gui.add(tintPass.material.uniforms.uTint.value, 'z').min(- 1).max(1).step(0.001).name('blue')
     }
   }
 
