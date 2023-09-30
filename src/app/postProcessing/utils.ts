@@ -8,6 +8,8 @@ import { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass.js'
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js'
 import { RGBShiftShader } from 'three/examples/jsm/shaders/RGBShiftShader.js'
 import { gsap } from 'gsap'
+import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js'
+
 
 
 export function realisticRender(setLoading: (res: number) => {}) {
@@ -92,7 +94,7 @@ export function realisticRender(setLoading: (res: number) => {}) {
   // render.physicallyCorrectLights = true
   // console.log('render', render.physicallyCorrectLights)
 
-  const renderTarget = new THREE.WebGLRenderTarget(100, 100, {
+  const renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
     minFilter: THREE.LinearFilter,
     magFilter: THREE.LinearFilter,
     format: THREE.RGBAFormat,
@@ -120,6 +122,9 @@ export function realisticRender(setLoading: (res: number) => {}) {
   const rgbShiftPass = new ShaderPass(RGBShiftShader)
   rgbShiftPass.enabled = false
   effectComposer.addPass(rgbShiftPass)
+
+  // const smaaPass = new SMAAPass()
+  // effectComposer.addPass(smaaPass)
 
 
   const controls = new OrbitControls(camera, render.domElement)
@@ -199,6 +204,8 @@ export function realisticRender(setLoading: (res: number) => {}) {
     // const time = clock.getElapsedTime()
     // render.render(scene, camera)
     effectComposer.render()
+    effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+    effectComposer.setSize(window.innerWidth, window.innerHeight)
     controls.update()
     requestAnimationFrame(tick)
   }
