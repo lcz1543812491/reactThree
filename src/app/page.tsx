@@ -52,6 +52,9 @@ export default function Home() {
         <Link href="/performance" className="text-white">
           Performance
         </Link>
+        <Link href="/postProcessing" className="text-white">
+          Post Processing
+        </Link>
       </main>
     </main>
   )
