@@ -16,7 +16,7 @@ export function realisticRender(setLoading: (res: number) => {}) {
   let gui: any;
   const scene = new THREE.Scene()
 
-  const ambentLight = new THREE.AmbientLight(0xffffff, 0.5)
+  const ambentLight = new THREE.AmbientLight(0xffffff, 0.8)
   const directLight = new THREE.DirectionalLight(0xffffff, 1)
   directLight.position.set(0.25, 8, -2.25)
   directLight.castShadow = true
@@ -98,7 +98,7 @@ export function realisticRender(setLoading: (res: number) => {}) {
     minFilter: THREE.LinearFilter,
     magFilter: THREE.LinearFilter,
     format: THREE.RGBAFormat,
-    encoding: THREE.SRGBColorSpace as any
+    colorSpace: THREE.SRGBColorSpace as any
   })
 
   const effectComposer = new EffectComposer(render, renderTarget)
@@ -128,11 +128,11 @@ export function realisticRender(setLoading: (res: number) => {}) {
 
 
 
-  const TintShader = {
+  const displacementShader = {
     uniforms:
     {
         tDiffuse: { value: null },
-        uTint: { value: null }
+        normalMap: { value: null }
     },
     vertexShader: `
         varying vec2 vUv;
@@ -146,22 +146,58 @@ export function realisticRender(setLoading: (res: number) => {}) {
     `,
     fragmentShader: `
         uniform sampler2D tDiffuse;
-        uniform vec3 uTint;
-
+        uniform sampler2D normalMap;
         varying vec2 vUv;
 
         void main()
         {
-            vec4 color = texture2D(tDiffuse, vUv);
-            color.rgb += uTint;
-
+            vec3 norColor = texture2D(normalMap, vUv).xyz * 2.0 - 1.0;
+            vec2 newuv = vUv + norColor.xy * 0.1;
+            vec4 color = texture2D(tDiffuse, newuv);
+            
             gl_FragColor = color;
         }
     `
  }
- const tintPass = new ShaderPass(TintShader)
- tintPass.material.uniforms.uTint.value = new THREE.Vector3()
- effectComposer.addPass(tintPass)
+ const displacementPass = new ShaderPass(displacementShader)
+ displacementShader.uniforms.normalMap.value = new THREE.TextureLoader().load('/environmentMaps/interfaceNormalMap.png' ) as any
+ console.log( displacementShader.uniforms.normalMap.value )
+ //effectComposer.addPass(displacementPass)
+
+ const TintShader = {
+  uniforms:
+  {
+      tDiffuse: { value: null },
+      uTint: { value: null }
+  },
+  vertexShader: `
+      varying vec2 vUv;
+
+      void main()
+      {
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+
+          vUv = uv;
+      }
+  `,
+  fragmentShader: `
+      uniform sampler2D tDiffuse;
+      uniform vec3 uTint;
+
+      varying vec2 vUv;
+
+      void main()
+      {
+          vec4 color = texture2D(tDiffuse, vUv);
+          color.rgb += uTint;
+
+          gl_FragColor = color;
+      }
+  `
+}
+const tintPass = new ShaderPass(TintShader)
+tintPass.material.uniforms.uTint.value = new THREE.Vector3()
+//effectComposer.addPass(tintPass)
 
 
   const controls = new OrbitControls(camera, render.domElement)
@@ -246,7 +282,7 @@ export function realisticRender(setLoading: (res: number) => {}) {
     // render.render(scene, camera)
     effectComposer.render()
     effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    effectComposer.setSize(window.innerWidth, window.innerHeight)
+    effectComposer.setSize(window.innerWidth, window.innerHeight)    
     controls.update()
     requestAnimationFrame(tick)
   }
