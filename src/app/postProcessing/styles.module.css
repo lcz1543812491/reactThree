@@ -1,0 +1,7 @@
+.tipsTitle{
+   color: red;
+}
+
+.tipsTitle :hover{
+    color: aqua;
+}

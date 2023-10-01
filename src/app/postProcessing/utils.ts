@@ -12,7 +12,7 @@ import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js'
 
 
 
-export function realisticRender(setLoading: (res: number) => {}) {
+export function realisticRender(setLoading: (res: number) => {}, setTranslate: (res: object) => {}) {
   let gui: any;
   const scene = new THREE.Scene()
 
@@ -161,7 +161,7 @@ export function realisticRender(setLoading: (res: number) => {}) {
  }
  const displacementPass = new ShaderPass(displacementShader)
  displacementShader.uniforms.normalMap.value = new THREE.TextureLoader().load('/environmentMaps/interfaceNormalMap.png' ) as any
- console.log( displacementShader.uniforms.normalMap.value )
+ // console.log( displacementShader.uniforms.normalMap.value )
  //effectComposer.addPass(displacementPass)
 
  const TintShader = {
@@ -277,9 +277,23 @@ tintPass.material.uniforms.uTint.value = new THREE.Vector3()
     render.setSize(window.innerWidth, window.innerHeight)
   })
 
+  const points = [
+    {
+        position: new THREE.Vector3(1.55, 0.3, - 0.6),
+    },
+  ];
+
   function tick() {
     // const time = clock.getElapsedTime()
     // render.render(scene, camera)
+
+   points.forEach(item => {
+    const screenPoints = item.position.clone()
+    screenPoints.project(camera)
+    // console.log(screenPoints.x)
+    setTranslate({x: screenPoints.x * window.innerWidth * 0.5, y: - screenPoints.y * window.innerHeight * 0.5})
+   })
+
     effectComposer.render()
     effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     effectComposer.setSize(window.innerWidth, window.innerHeight)    
