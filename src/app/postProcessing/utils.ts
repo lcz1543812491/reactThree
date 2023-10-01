@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 import { DotScreenPass } from 'three/examples/jsm/postprocessing/DotScreenPass.js'
 import { GlitchPass } from 'three/examples/jsm/postprocessing/GlitchPass.js'
@@ -10,10 +10,8 @@ import { RGBShiftShader } from 'three/examples/jsm/shaders/RGBShiftShader.js'
 import { gsap } from 'gsap'
 import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js'
 
-
-
-export function realisticRender(setLoading: (res: number) => {}, setTranslate: (res: object) => {}) {
-  let gui: any;
+export function realisticRender(setLoading: (res: number) => {}, setTranslate: (res: object) => {}, setVisible: (res: number) => {}) {
+  let gui: any
   const scene = new THREE.Scene()
 
   const ambentLight = new THREE.AmbientLight(0xffffff, 0.8)
@@ -34,20 +32,14 @@ export function realisticRender(setLoading: (res: number) => {}, setTranslate: (
 
   directLight.shadow.radius = 10
 
-  const directLightShadowHelper = new THREE.CameraHelper( directLight.shadow.camera );
+  const directLightShadowHelper = new THREE.CameraHelper(directLight.shadow.camera)
   directLightShadowHelper.visible = false
-  scene.add(directLightShadowHelper);
-
-
+  scene.add(directLightShadowHelper)
 
   scene.add(ambentLight)
   scene.add(directLight)
 
-
-  const testSphere = new THREE.Mesh(
-    new THREE.SphereGeometry(1, 32, 32), 
-    new THREE.MeshStandardMaterial()
-  )
+  const testSphere = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), new THREE.MeshStandardMaterial())
 
   // scene.add(testSphere)
 
@@ -58,12 +50,11 @@ export function realisticRender(setLoading: (res: number) => {}, setTranslate: (
   const axisHelper = new THREE.AxesHelper()
   scene.add(axisHelper)
 
-
   const planeGeometry = new THREE.PlaneGeometry(2, 2, 1, 1)
   const planeMaterial = new THREE.ShaderMaterial({
     transparent: true,
     uniforms: {
-      uAlpha: { value:1 }
+      uAlpha: { value: 1 }
     },
     vertexShader: `
     void main()
@@ -83,7 +74,7 @@ export function realisticRender(setLoading: (res: number) => {}, setTranslate: (
   const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial)
   // scene.add(planeMesh)
 
-  const render = new THREE.WebGLRenderer({ antialias:true, canvas: document.getElementById('galaxy') as HTMLCanvasElement })
+  const render = new THREE.WebGLRenderer({ antialias: true, canvas: document.getElementById('galaxy') as HTMLCanvasElement })
   render.setSize(window.innerWidth, window.innerHeight)
   render.shadowMap.enabled = true
   render.shadowMap.type = THREE.PCFSoftShadowMap
@@ -107,7 +98,7 @@ export function realisticRender(setLoading: (res: number) => {}, setTranslate: (
 
   const renderPass = new RenderPass(scene, camera)
   effectComposer.addPass(renderPass)
-  
+
   const dotScreenPass = new DotScreenPass()
   dotScreenPass.enabled = false
   effectComposer.addPass(dotScreenPass)
@@ -117,7 +108,6 @@ export function realisticRender(setLoading: (res: number) => {}, setTranslate: (
   glitchPass.enabled = false
   effectComposer.addPass(glitchPass)
 
-
   // RGB Shift pass
   const rgbShiftPass = new ShaderPass(RGBShiftShader)
   rgbShiftPass.enabled = false
@@ -126,13 +116,10 @@ export function realisticRender(setLoading: (res: number) => {}, setTranslate: (
   // const smaaPass = new SMAAPass()
   // effectComposer.addPass(smaaPass)
 
-
-
   const displacementShader = {
-    uniforms:
-    {
-        tDiffuse: { value: null },
-        normalMap: { value: null }
+    uniforms: {
+      tDiffuse: { value: null },
+      normalMap: { value: null }
     },
     vertexShader: `
         varying vec2 vUv;
@@ -158,19 +145,18 @@ export function realisticRender(setLoading: (res: number) => {}, setTranslate: (
             gl_FragColor = color;
         }
     `
- }
- const displacementPass = new ShaderPass(displacementShader)
- displacementShader.uniforms.normalMap.value = new THREE.TextureLoader().load('/environmentMaps/interfaceNormalMap.png' ) as any
- // console.log( displacementShader.uniforms.normalMap.value )
- //effectComposer.addPass(displacementPass)
+  }
+  const displacementPass = new ShaderPass(displacementShader)
+  displacementShader.uniforms.normalMap.value = new THREE.TextureLoader().load('/environmentMaps/interfaceNormalMap.png') as any
+  // console.log( displacementShader.uniforms.normalMap.value )
+  //effectComposer.addPass(displacementPass)
 
- const TintShader = {
-  uniforms:
-  {
+  const TintShader = {
+    uniforms: {
       tDiffuse: { value: null },
       uTint: { value: null }
-  },
-  vertexShader: `
+    },
+    vertexShader: `
       varying vec2 vUv;
 
       void main()
@@ -180,7 +166,7 @@ export function realisticRender(setLoading: (res: number) => {}, setTranslate: (
           vUv = uv;
       }
   `,
-  fragmentShader: `
+    fragmentShader: `
       uniform sampler2D tDiffuse;
       uniform vec3 uTint;
 
@@ -194,15 +180,13 @@ export function realisticRender(setLoading: (res: number) => {}, setTranslate: (
           gl_FragColor = color;
       }
   `
-}
-const tintPass = new ShaderPass(TintShader)
-tintPass.material.uniforms.uTint.value = new THREE.Vector3()
-//effectComposer.addPass(tintPass)
-
+  }
+  const tintPass = new ShaderPass(TintShader)
+  tintPass.material.uniforms.uTint.value = new THREE.Vector3()
+  //effectComposer.addPass(tintPass)
 
   const controls = new OrbitControls(camera, render.domElement)
   controls.enableDamping = true
-
 
   const clock = new THREE.Clock()
 
@@ -222,54 +206,44 @@ tintPass.material.uniforms.uTint.value = new THREE.Vector3()
     gsap.to(planeMaterial.uniforms.uAlpha, { duration: 2, value: 0 })
 
     const guiElements = document.getElementsByClassName('dg ac')
-    if(guiElements.length === 0){
+    if (guiElements.length === 0) {
       // console.log(guiElements)
       const dat = require('dat.gui')
-      gui = new dat.GUI();
+      gui = new dat.GUI()
       gui.add(directLight, 'intensity').min(0).max(10).step(0.001)
       gui.add(directLight.position, 'x').min(-5).max(5).name('x')
       gui.add(directLight.position, 'y').min(-5).max(5).name('y')
       gui.add(directLight.position, 'z').min(-5).max(5).name('z')
 
-      gui.add(tintPass.material.uniforms.uTint.value, 'x').min(- 1).max(1).step(0.001).name('red')
-      gui.add(tintPass.material.uniforms.uTint.value, 'y').min(- 1).max(1).step(0.001).name('green')
-      gui.add(tintPass.material.uniforms.uTint.value, 'z').min(- 1).max(1).step(0.001).name('blue')
+      gui.add(tintPass.material.uniforms.uTint.value, 'x').min(-1).max(1).step(0.001).name('red')
+      gui.add(tintPass.material.uniforms.uTint.value, 'y').min(-1).max(1).step(0.001).name('green')
+      gui.add(tintPass.material.uniforms.uTint.value, 'z').min(-1).max(1).step(0.001).name('blue')
     }
   }
 
-  const environmentMap = cubeTextureLoader.load([
-    '/environmentMaps/0/px.jpg', 
-    '/environmentMaps/0/nx.jpg', 
-    '/environmentMaps/0/py.jpg', 
-    '/environmentMaps/0/ny.jpg', 
-    '/environmentMaps/0/pz.jpg', 
-    '/environmentMaps/0/nz.jpg', 
-  ])
+  const environmentMap = cubeTextureLoader.load(['/environmentMaps/0/px.jpg', '/environmentMaps/0/nx.jpg', '/environmentMaps/0/py.jpg', '/environmentMaps/0/ny.jpg', '/environmentMaps/0/pz.jpg', '/environmentMaps/0/nz.jpg'])
 
   environmentMap.colorSpace = THREE.SRGBColorSpace
   scene.background = environmentMap
   scene.environment = environmentMap
- 
 
-  gltfLoader.load('/model/DamagedHelmet/glTF/DamagedHelmet.gltf', (model) => {
+  gltfLoader.load('/model/DamagedHelmet/glTF/DamagedHelmet.gltf', model => {
     model.scene.scale.set(5, 5, 5)
     model.scene.position.set(0, 0, 0)
     scene.add(model.scene)
-    if(gui){
-        gui.add(model.scene.rotation, 'y').min(-Math.PI).max(Math.PI).step(0.01)
+    if (gui) {
+      gui.add(model.scene.rotation, 'y').min(-Math.PI).max(Math.PI).step(0.01)
     }
-    scene.traverse((child) => {
-        if((child as THREE.Mesh).material instanceof THREE.MeshStandardMaterial){
-            // (child as any).material.envMap = environmentMap;
-            // (child as any).material.envMapIntensity = 3
-            // child.castShadow = true
-            // child.receiveShadow = true
-            // console.log(child)
-        }
+    scene.traverse(child => {
+      if ((child as THREE.Mesh).material instanceof THREE.MeshStandardMaterial) {
+        // (child as any).material.envMap = environmentMap;
+        // (child as any).material.envMapIntensity = 3
+        // child.castShadow = true
+        // child.receiveShadow = true
+        // console.log(child)
+      }
     })
   })
-
-
 
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight
@@ -279,24 +253,39 @@ tintPass.material.uniforms.uTint.value = new THREE.Vector3()
 
   const points = [
     {
-        position: new THREE.Vector3(1.55, 0.3, - 0.6),
-    },
-  ];
+      position: new THREE.Vector3(1.55, 0.3, -0.6)
+    }
+  ]
+  const raycaster = new THREE.Raycaster()
 
   function tick() {
     // const time = clock.getElapsedTime()
     // render.render(scene, camera)
 
-   points.forEach(item => {
-    const screenPoints = item.position.clone()
-    screenPoints.project(camera)
-    // console.log(screenPoints.x)
-    setTranslate({x: screenPoints.x * window.innerWidth * 0.5, y: - screenPoints.y * window.innerHeight * 0.5})
-   })
+    points.forEach(item => {
+      const screenPoints = item.position.clone()
+      screenPoints.project(camera)
+
+      raycaster.setFromCamera(screenPoints as any, camera)
+      const intersects = raycaster.intersectObjects(scene.children, true)
+      if (intersects.length === 0) {
+        setVisible(1)
+      } else {
+        const pointsDistance = item.position.distanceTo(camera.position)
+        console.log(pointsDistance, intersects[0].distance)
+        if (intersects[0].distance >= pointsDistance) {
+          setVisible(0)
+        } else {
+          setVisible(1)
+        }
+      }
+      // console.log(screenPoints.x)
+      setTranslate({ x: screenPoints.x * window.innerWidth * 0.5, y: -screenPoints.y * window.innerHeight * 0.5 })
+    })
 
     effectComposer.render()
     effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    effectComposer.setSize(window.innerWidth, window.innerHeight)    
+    effectComposer.setSize(window.innerWidth, window.innerHeight)
     controls.update()
     requestAnimationFrame(tick)
   }

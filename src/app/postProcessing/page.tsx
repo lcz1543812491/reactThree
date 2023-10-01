@@ -7,9 +7,13 @@ import styles from './styles.module.css'
 export default function Three() {
   const [loading, setLoading] = useState(0)
   const [translate, setTranslate] = useState({x: 0, y: 0})
+  const [visible, setVisible] = useState(1)
 
   useEffect(() => {
-    realisticRender(setLoading as (res: number) => {}, setTranslate as (res: object) => {})
+    realisticRender(
+      setLoading as (res: number) => {}, 
+      setTranslate as (res: object) => {}, 
+      setVisible as (res: number) => {})
     return () => {
       setLoading(0)
     }
@@ -19,7 +23,7 @@ export default function Three() {
     <div>
       <canvas id="galaxy" style={{ width: '100vw', height: '100vh', background: 'black' }}></canvas>
       <div
-        style={{transform: `scale(1, 1) translateX(${translate.x}px) translateY(${translate.y}px)`, transition: 'transform 0.1s'}}
+        style={{transform: `scale(${visible}, ${visible}) translateX(${translate.x}px) translateY(${translate.y}px)`, transition: 'transform 0.1s'}}
         className={`cursor-pointer 
         absolute top-1/2 
         left-1/2 w-16 h-16 rounded-full
