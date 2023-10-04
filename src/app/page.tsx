@@ -55,6 +55,9 @@ export default function Home() {
         <Link href="/postProcessing" className="text-white">
           Post Processing
         </Link>
+        <Link href="/portal" className="text-white">
+          Portal
+        </Link>
       </main>
     </main>
   )
