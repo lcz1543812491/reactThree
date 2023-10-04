@@ -64,7 +64,7 @@ export function initShader() {
 
   const debugColor = {
     deepColor: '#186691',
-    surfaceColor: '#9bd8ff'
+    surfaceColor: '#f27cc9'
   }
 
 
@@ -106,7 +106,7 @@ export function initShader() {
   }
 
 
-  const planeGeometry = new THREE.PlaneGeometry(1, 1, 512, 512)
+  const planeGeometry = new THREE.PlaneGeometry(4, 4, 512, 512)
 
   const mesh = new THREE.Mesh(planeGeometry, material)
   mesh.rotation.x = -Math.PI * 0.5
