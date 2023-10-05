@@ -71,25 +71,32 @@ export function initPortal() {
       scene.add(model.scene)
     })
 
-    const fireCount = 200 
+    const fireCount = 50 
     const fireGeometry = new THREE.BufferGeometry()
 
-    const positionArray = new Float32Array(50 * 3)
+    const positionArray = new Float32Array(fireCount * 3)
+    const scaleArr = new Float32Array(fireCount)
 
     for(let i = 0; i < fireCount * 3; i ++) {
         positionArray[i * 3 + 0] = (Math.random() - 0.5) * 4
         positionArray[i * 3 + 1] =  (Math.random() - 0.5) * 4
         positionArray[i * 3 + 2] =  (Math.random() - 0.5) * 4
+
+        scaleArr[i] = Math.random() * 4
     }
 
     fireGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positionArray, 3))
+    fireGeometry.setAttribute('aScale', new THREE.Float32BufferAttribute(scaleArr, 1))
+
     const fireMaterial = new THREE.ShaderMaterial({ 
         uniforms: {
             pixelRation: { value: Math.min(window.devicePixelRatio, 2) }
         },
         vertexShader: fireVertexShader,
         fragmentShader: fireFragmentShader,
-        transparent: true
+        blending: THREE.AdditiveBlending,
+        transparent: true,
+        depthWrite: false,
      })
     const points = new THREE.Points(fireGeometry, fireMaterial)
 
