@@ -57,7 +57,12 @@ export function initPortal() {
 
     const lightMaterial1 = new THREE.ShaderMaterial({ 
         vertexShader: portVertexShader,
-        fragmentShader: portFragmentShader
+        fragmentShader: portFragmentShader,
+        uniforms: {
+            uTime: {value: 0},
+            colorStart: { value: '#ff0000' },
+            colorEnd: { value: '#0000ff' }
+        }
      })
 
     gltfLoader.load('/model/portal/portal.glb', (model) => {
@@ -180,6 +185,7 @@ export function initPortal() {
     {
         const elapsedTime = clock.getElapsedTime()
         fireMaterial.uniforms.uTime.value = elapsedTime
+        lightMaterial1.uniforms.uTime.value = elapsedTime
     
         // Update controls
         controls.update()
