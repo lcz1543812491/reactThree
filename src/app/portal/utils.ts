@@ -8,6 +8,11 @@ import fireVertexShader from './shader/firefly/verticxShader.glsl'
 // @ts-ignore
 import fireFragmentShader from './shader/firefly/fragment.glsl'
 
+// @ts-ignore
+import portVertexShader from './shader/portal/verticxShader.glsl'
+// @ts-ignore
+import portFragmentShader from './shader/portal/fragment.glsl'
+
 
 
 export function initPortal() {
@@ -50,7 +55,10 @@ export function initPortal() {
     const baseMaterial = new THREE.MeshBasicMaterial({ map: bakedTexture })
     const lightMaterial = new THREE.MeshBasicMaterial({ color: 0xffffe5 })
 
-    const lightMaterial1 = new THREE.MeshBasicMaterial({ color: 0xffffff })
+    const lightMaterial1 = new THREE.ShaderMaterial({ 
+        vertexShader: portVertexShader,
+        fragmentShader: portFragmentShader
+     })
 
     gltfLoader.load('/model/portal/portal.glb', (model) => {
     //   model.scene.traverse((child: any) => {
