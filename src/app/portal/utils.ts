@@ -90,7 +90,8 @@ export function initPortal() {
 
     const fireMaterial = new THREE.ShaderMaterial({ 
         uniforms: {
-            pixelRation: { value: Math.min(window.devicePixelRatio, 2) }
+            pixelRation: { value: Math.min(window.devicePixelRatio, 2) },
+            uTime: { value: 0 }
         },
         vertexShader: fireVertexShader,
         fragmentShader: fireFragmentShader,
@@ -170,6 +171,7 @@ export function initPortal() {
     const tick = () =>
     {
         const elapsedTime = clock.getElapsedTime()
+        fireMaterial.uniforms.uTime.value = elapsedTime
     
         // Update controls
         controls.update()
