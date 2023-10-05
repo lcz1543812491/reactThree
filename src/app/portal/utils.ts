@@ -3,6 +3,13 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 
+// @ts-ignore
+import fireVertexShader from './shader/firefly/verticxShader.glsl'
+// @ts-ignore
+import fireFragmentShader from './shader/firefly/fragment.glsl'
+
+
+
 export function initPortal() {
 
 //    const SPECTOR = require("spectorjs");
@@ -63,6 +70,31 @@ export function initPortal() {
 
       scene.add(model.scene)
     })
+
+    const fireCount = 200 
+    const fireGeometry = new THREE.BufferGeometry()
+
+    const positionArray = new Float32Array(50 * 3)
+
+    for(let i = 0; i < fireCount * 3; i ++) {
+        positionArray[i * 3 + 0] = (Math.random() - 0.5) * 4
+        positionArray[i * 3 + 1] =  (Math.random() - 0.5) * 4
+        positionArray[i * 3 + 2] =  (Math.random() - 0.5) * 4
+    }
+
+    fireGeometry.setAttribute('position', new THREE.Float32BufferAttribute(positionArray, 3))
+    const fireMaterial = new THREE.ShaderMaterial({ 
+        uniforms: {
+            pixelRation: { value: Math.min(window.devicePixelRatio, 2) }
+        },
+        vertexShader: fireVertexShader,
+        fragmentShader: fireFragmentShader,
+        transparent: true
+     })
+    const points = new THREE.Points(fireGeometry, fireMaterial)
+
+    scene.add(points)
+
     
     /**
      * Object
@@ -95,6 +127,8 @@ export function initPortal() {
         // Update renderer
         renderer.setSize(sizes.width, sizes.height)
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+
+        fireMaterial.uniforms.pixelRation.value = Math.min(window.devicePixelRatio, 2)
     })
     
     /**
