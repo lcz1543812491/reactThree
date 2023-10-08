@@ -163,8 +163,10 @@ export function initPortal() {
     scene.add(camera)
     
     // Controls
-    const controls = new OrbitControls(camera, document.getElementById('galaxy') as HTMLCanvasElement,)
+    const controls = new OrbitControls(camera, document.getElementById('galaxy') as HTMLCanvasElement)
+    controls.enableRotate = false
     controls.enableDamping = true
+    controls.autoRotate = true
     
     /**
      * Renderer
