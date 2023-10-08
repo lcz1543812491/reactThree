@@ -59,9 +59,13 @@ export default function Home() {
           Portal
         </Link>
         <Link href="/portfolio" className="text-white">
-           Portfolio
+          Portfolio
         </Link>
-        
+      </main>
+      <main className="flex min-h-screen flex-col items-center p-24 bg-black gap-8">
+        <Link href="/texturePractise" className="text-white">
+          Texture Practise
+        </Link>
       </main>
     </main>
   )
