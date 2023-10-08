@@ -58,6 +58,10 @@ export default function Home() {
         <Link href="/portal" className="text-white">
           Portal
         </Link>
+        <Link href="/portfolio" className="text-white">
+           Portfolio
+        </Link>
+        
       </main>
     </main>
   )
