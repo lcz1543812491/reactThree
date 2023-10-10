@@ -1,4 +1,3 @@
-import { text } from 'stream/consumers'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
@@ -30,6 +29,8 @@ export function texturePractise() {
 
   const textureLoader = new THREE.TextureLoader()
   const texture = textureLoader.load('/texture/texture/watercover/CityNewYork002_COL_VAR1_1K.png')
+
+  texture.colorSpace = THREE.SRGBColorSpace
 
   const aomap = textureLoader.load('/texture/texture/watercover/CityNewYork002_AO_1K.jpg')
   const colormap = textureLoader.load('/texture/texture/colors.png')
