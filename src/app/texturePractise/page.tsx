@@ -1,8 +1,9 @@
 'use client'
 // import { texturePractise } from './utils'
 // import { texturePractise } from './uv'
-import { texturePractise } from './gtlf'
-import { useEffect, useRef } from 'react'
+// import { texturePractise } from './gtlf'
+import { texturePractise } from './phontexture'
+import { useEffect } from 'react'
 
 export default function Three() {
 
