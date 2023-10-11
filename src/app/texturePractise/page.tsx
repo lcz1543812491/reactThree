@@ -2,7 +2,8 @@
 // import { texturePractise } from './utils'
 // import { texturePractise } from './uv'
 // import { texturePractise } from './gtlf'
-import { texturePractise } from './phontexture'
+// import { texturePractise } from './phontexture'
+import { texturePractise } from './pbr'
 import { useEffect } from 'react'
 
 export default function Three() {
