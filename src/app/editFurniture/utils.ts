@@ -71,8 +71,10 @@ export function initEditFurniture() {
   dracoLoader.setDecoderPath('draco/')
   loader.setDRACOLoader(dracoLoader)
   loader.load('/model/editFurniture/house-scene-min.glb', model => {
+    // console.log(model)
     basicScene = model.scene
     const guiElements = document.getElementsByClassName('dg ac')
+    //console.log('guiElements', guiElements)
     if (guiElements.length === 0) {
       const dat = require('dat.gui')
       const gui = new dat.GUI()
