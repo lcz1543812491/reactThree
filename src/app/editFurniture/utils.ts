@@ -39,8 +39,14 @@ export function initEditFurniture() {
   const transformControls = new TransformControls(camera, render.domElement)
   transformControls.addEventListener('change', tick)
   transformControls.addEventListener('dragging-changed', event => {
-    console.log('event', event)
+    // console.log('event', event)
     controls.enabled = !event.value
+  })
+
+  transformControls.addEventListener('change', () => {
+    if(eventObj.isOnFloor && transformControls && transformControls.object){
+        transformControls.object.position.y = 0
+    }
   })
 
   scene.add(transformControls)
@@ -70,19 +76,57 @@ export function initEditFurniture() {
     if (guiElements.length === 0) {
       const dat = require('dat.gui')
       const gui = new dat.GUI()
-      gui.add(eventObj, 'addScene')
 
+      gui.add(eventObj, 'addScene')
+      gui.add(eventObj, 'setTranslate')
+      gui.add(eventObj, 'setScale')
+      gui.add(eventObj, 'setRotate')
+      gui.add(eventObj, 'toggleSpace')
+      gui.add(eventObj, 'cancel')
+
+      const furnitureList = gui.addFolder('家具列表')
+
+      let snapFolder = gui.addFolder('固定设置')
+      snapFolder
+        .add(eventObj, 'translateSnapNum', {
+          不固定: null,
+          1: 1,
+          0.1: 0.1,
+          10: 10
+        })
+        .name('固定位移设置')
+        .onChange(() => {
+          transformControls.setTranslationSnap(eventObj.translateSnapNum)
+        })
+
+        snapFolder.add(eventObj, 'isOnFloor')
+
+        
       const meshList = [
         { name: '盆栽', path: '/model/editFurniture/plants-min.glb', addMesh: () => {} },
         { name: '单人沙发', path: '/model/editFurniture/sofa_chair_min.glb', addMesh: () => {} }
       ]
       const modelList = []
-      meshList.forEach(item => {
+
+      const meshesNum = {} as any
+
+      meshList.forEach((item: any) => {
         item.addMesh = () => {
-          loader.load(item.path, model => {
-            modelList.push({ ...item, object3d: model.scene })
-            scene.add(model.scene)
-            transformControls.attach(model.scene)
+          loader.load(item.path, itemModel => {
+            const object3d = itemModel.scene
+            modelList.push({ ...item, object3d })
+            scene.add(object3d)
+            transformControls.attach(object3d)
+
+            const select = {
+              selectFun: () => {
+                transformControls.attach(object3d)
+              }
+            }
+
+            meshesNum[item.name] = meshesNum[item.name] ? meshesNum[item.name] + 1 : 1
+
+            furnitureList.add(select, 'selectFun').name(item.name + meshesNum[item.name])
           })
         }
         gui.add(item, 'addMesh').name(item.name)
@@ -93,7 +137,24 @@ export function initEditFurniture() {
   const eventObj = {
     addScene: () => {
       scene.add(basicScene)
-    }
+    },
+    setTranslate: () => {
+      transformControls.setMode('translate')
+    },
+    setRotate: () => {
+      transformControls.setMode('rotate')
+    },
+    setScale: () => {
+      transformControls.setMode('scale')
+    },
+    toggleSpace: () => {
+      transformControls.setSpace(transformControls.space === 'local' ? 'world' : 'local')
+    },
+    cancel: () => {
+      transformControls.detach()
+    },
+    translateSnapNum: null,
+    isOnFloor: false
   }
 
   window.addEventListener('resize', () => {
