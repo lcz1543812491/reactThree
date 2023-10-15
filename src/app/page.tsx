@@ -66,6 +66,9 @@ export default function Home() {
         <Link href="/texturePractise" className="text-white">
           Texture Practise
         </Link>
+        <Link href="/editFurniture" className="text-white">
+          Edit Furniture
+        </Link>
       </main>
     </main>
   )
