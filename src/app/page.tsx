@@ -69,6 +69,9 @@ export default function Home() {
         <Link href="/editFurniture" className="text-white">
           Edit Furniture
         </Link>
+        <Link href="/flyLight" className="text-white">
+          Fly Light
+        </Link> 
       </main>
     </main>
   )
