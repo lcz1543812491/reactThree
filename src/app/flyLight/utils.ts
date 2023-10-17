@@ -36,6 +36,10 @@ export function initFlyLight() {
 
   const controls = new OrbitControls(camera, render.domElement)
   controls.enableDamping = true
+  controls.autoRotate = true
+  controls.autoRotateSpeed = 0.5
+  controls.maxPolarAngle = Math.PI
+  controls.minPolarAngle = Math.PI / 4 * 2
 
   const clock = new THREE.Clock()
 
