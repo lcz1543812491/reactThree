@@ -71,7 +71,10 @@ export default function Home() {
         </Link>
         <Link href="/flyLight" className="text-white">
           Fly Light
-        </Link> 
+        </Link>
+        <Link href="/particleDemo" className="text-white">
+          Particle Demo
+        </Link>
       </main>
     </main>
   )
