@@ -7,6 +7,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import testVertexShader from './shader/verticxShader.glsl'
 // @ts-ignore
 import testFragmentShader from './shader/fragment.glsl'
+import { shaderMaterial } from '@react-three/drei'
 
 export function initParticleDemo() {
   const scene = new THREE.Scene()
@@ -51,6 +52,9 @@ export function initParticleDemo() {
     uniforms: {
       texture: {
         value: texture
+      },
+      uTime: {
+        value: 0
       }
     }
   })
@@ -95,6 +99,7 @@ export function initParticleDemo() {
 
   function tick() {
     const time = clock.getElapsedTime()
+    pointsMaterial.uniforms.uTime.value = time;
 
     render.render(scene, camera)
     controls.update()
