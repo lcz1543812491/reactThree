@@ -79,6 +79,32 @@ export function vectorPractise() {
   //   mesh.position.set(-20, 0, -10)
   //   scene.add(mesh)
 
+  const a1 = new THREE.Vector3(50, 0, 0)
+  const b1 = new THREE.Vector3(30, 0, 30)
+
+  const origin1 = new THREE.Vector3(0, 0, 0)
+
+  const a2 = a1.clone().sub(origin1)
+  const a2_dir = a2.clone().normalize()
+  const length3 = a2.length()
+  const arrowHelper3 = new THREE.ArrowHelper(a2_dir, origin1, length3, 0xffff00)
+  scene.add(arrowHelper3)
+
+  const b2 = b1.clone().sub(origin1)
+  const b2_dir = b2.clone().normalize()
+  const length4 = b2.length()
+  const arrowHelper4 = new THREE.ArrowHelper(b2_dir, origin1, length4, 0x00ff00)
+  scene.add(arrowHelper4)
+
+  const cross = new THREE.Vector3()
+  cross.crossVectors(b1, a1)
+
+  const cross1 = cross.clone().sub(origin1)
+  const cross1_dir = cross1.clone().normalize()
+  const length5 = cross1.length()
+  const arrowHelper5 = new THREE.ArrowHelper(cross1_dir, origin1, 90, 0x00ffff)
+  scene.add(arrowHelper5)
+
   const v = new THREE.Vector3(30, 40, 0)
   const g = new THREE.Vector3(0, -9.8, 0)
   const gemeory = new THREE.BoxGeometry(5, 5, 5)
