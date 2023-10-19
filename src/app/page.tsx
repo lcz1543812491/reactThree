@@ -75,6 +75,9 @@ export default function Home() {
         <Link href="/particleDemo" className="text-white">
           Particle Demo
         </Link>
+        <Link href="/vectorPractise" className="text-white">
+          Vector Practise
+        </Link>
       </main>
     </main>
   )
