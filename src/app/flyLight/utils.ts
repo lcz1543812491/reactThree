@@ -3,6 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
+import { Fireworks } from './fireworks'
 import gsap from 'gsap'
 // @ts-ignore
 import testVertexShader from './shader/verticxShader.glsl'
@@ -36,10 +37,10 @@ export function initFlyLight() {
 
   const controls = new OrbitControls(camera, render.domElement)
   controls.enableDamping = true
-  controls.autoRotate = true
-  controls.autoRotateSpeed = 0.5
-  controls.maxPolarAngle = Math.PI
-  controls.minPolarAngle = Math.PI / 4 * 2
+  // controls.autoRotate = true
+  // controls.autoRotateSpeed = 0.5
+  // controls.maxPolarAngle = Math.PI
+  // controls.minPolarAngle = (Math.PI / 4) * 2
 
   const clock = new THREE.Clock()
 
@@ -69,23 +70,18 @@ export function initFlyLight() {
     ;(model.scene.children[0] as any).material = shaderMaterial
     // scene.add(model.scene)
 
-    for(let i = 0; i < 200; i++){
+    for (let i = 0; i < 200; i++) {
       const fly = model.scene.clone(true)
-      fly.position.set(
-        (Math.random() - 0.5) * 300,  
-        (Math.random() - 0.5) * 60 + 25,
-        (Math.random() - 0.5) * 300
-     )
-     gsap.to(fly.position, {
-        x: "+=" + Math.random() * 5,
-        y: "+=" + Math.random() * 20,
+      fly.position.set((Math.random() - 0.5) * 300, (Math.random() - 0.5) * 60 + 25, (Math.random() - 0.5) * 300)
+      gsap.to(fly.position, {
+        x: '+=' + Math.random() * 5,
+        y: '+=' + Math.random() * 20,
         yoyo: true,
         duration: 5 + Math.random() * 10,
-        repeat: -1,
-      });
-     scene.add(fly)
-    }  
-
+        repeat: -1
+      })
+      scene.add(fly)
+    }
   })
 
   window.addEventListener('resize', () => {
@@ -94,9 +90,29 @@ export function initFlyLight() {
     render.setSize(window.innerWidth, window.innerHeight)
   })
 
-  function tick() {
-    const time = clock.getElapsedTime()
+  const fireWorksArray = [] as Fireworks[]
 
+  function createFireworks() {
+    const color = `hsl(${Math.floor(Math.random() * 360)},100%, 80%)`
+
+    const position = {
+      x: (Math.random() - 0.5) * 30,
+      z: (Math.random() - 0.5) * 30,
+      y: 7 + (Math.random() - 0.5) * 25
+    }
+
+    const fireworks = new Fireworks(color, position)
+    fireworks.addScene(scene, camera)
+    fireWorksArray.push(fireworks)
+  }
+
+  window.addEventListener('click', createFireworks)
+
+  function tick() {
+    // const time = clock.getElapsedTime()
+    fireWorksArray.forEach(item => {
+      item.update()
+    })
     render.render(scene, camera)
     controls.update()
     requestAnimationFrame(tick)
