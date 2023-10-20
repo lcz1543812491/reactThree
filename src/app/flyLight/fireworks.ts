@@ -4,6 +4,12 @@ import testVertexShader from './shader/fireWorks/verticxShader.glsl'
 // @ts-ignore
 import testFragmentShader from './shader/fireWorks/fragment.glsl'
 
+// @ts-ignore
+import explodeVertexShader from './shader/explode/verticxShader.glsl'
+// @ts-ignore
+import explodeFragmentShader from './shader/explode/fragment.glsl'
+import { time } from 'console'
+
 interface Position {
   x: number
   y: number
@@ -39,21 +45,99 @@ export class Fireworks {
       uniforms: {
         uTime: {
           value: 0
+        },
+        uSize: {
+            value: 20
         }
       }
     })
 
     this.startPoint = new THREE.Points(this.fireStartGeometry, this.shaderMaterial)
+
+
+    this.explodeFireworks = new THREE.BufferGeometry()
+    this.explodeCount = 500 + Math.floor(Math.random() * 200)
+    const explodePosition = new Float32Array(this.explodeCount * 3)
+    const explodeSize = new Float32Array(this.explodeCount)
+    const directionArray = new Float32Array(this.explodeCount * 3)
+
+    for(let i = 0; i < this.explodeCount; i ++){
+        explodePosition[i * 3] = position.x
+        explodePosition[i * 3 + 1] = position.y
+        explodePosition[i * 3 + 2] = position.z
+
+        explodeSize[i] = Math.random()
+
+        const theta = Math.random() * 2 * Math.PI
+        const beta = Math.random() * 2 * Math.PI
+        const r = Math.random()
+
+        directionArray[i * 3] = r * Math.sin(beta)* Math.cos(theta)
+        directionArray[i * 3 + 1] = r * Math.sin(beta)* Math.sin(theta)
+        directionArray[i * 3 + 2] = r * Math.cos(beta)
+        
+    }
+
+    //console.log(directionArray)
+
+    this.explodeFireworks.setAttribute('position', new THREE.BufferAttribute(explodePosition, 3))
+    this.explodeFireworks.setAttribute('aScale', new THREE.BufferAttribute(explodeSize, 1))
+    this.explodeFireworks.setAttribute('aDirection', new THREE.BufferAttribute(directionArray, 3))
+    this.explodeMaterial = new THREE.ShaderMaterial({
+      vertexShader: explodeVertexShader,
+      fragmentShader: explodeFragmentShader,
+      uniforms: {
+        uSize: {
+          value: 0
+        },
+        uTime: {
+          value: 0
+        }
+      },
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending
+    })
+
+    this.explodeWorks = new THREE.Points(this.explodeFireworks, this.explodeMaterial)
+
   }
 
   addScene(scene: THREE.Scene, camera: THREE.PerspectiveCamera) {
     //console.log(scene, camera)
     scene.add(this.startPoint)
+    scene.add(this.explodeWorks)
   }
 
   update() {
-    this.shaderMaterial.uniforms.uTime.value = this.clock.getElapsedTime()
+    const time = this.clock.getElapsedTime()
+    //console.log(time)
+    if(time < 1){
+      this.shaderMaterial.uniforms.uTime.value = time
+    }else {
+      const time1 = time - 1;  
+      this.shaderMaterial.uniforms.uSize.value = 0
+      this.startPoint.clear()
+      this.fireStartGeometry.dispose()
+      this.shaderMaterial.dispose()
+      this.explodeMaterial.uniforms.uSize.value = 20.0
+      this.explodeMaterial.uniforms.uTime.value = time1
+      if(time1 > 5){
+        this.explodeWorks.clear()
+        this.explodeFireworks.dispose()
+        this.explodeMaterial.dispose()
+      }
+    }
+    
   }
+
+  explodeWorks: THREE.Points<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.ShaderMaterial>
+
+  explodeMaterial: THREE.ShaderMaterial
+
+  explodeCount: number
+
+  explodeFireworks: THREE.BufferGeometry<THREE.NormalBufferAttributes>
 
   clock: THREE.Clock = null as unknown as THREE.Clock
 
