@@ -32,7 +32,8 @@ export class Fireworks {
     const uStep = targetPosition.clone().sub(fromPosition)
     const path = new Float32Array([uStep.x, uStep.y, uStep.z])
 
- 
+
+    this.color = new THREE.Color(color)
     this.fireStartGeometry.setAttribute('uStep', new THREE.BufferAttribute(path, 3))
     this.fireStartGeometry.setAttribute('position', new THREE.BufferAttribute(startPositionArray, 3))
 
@@ -48,7 +49,8 @@ export class Fireworks {
         },
         uSize: {
             value: 20
-        }
+        },
+        color: { value: this.color }
       }
     })
 
@@ -92,7 +94,8 @@ export class Fireworks {
         },
         uTime: {
           value: 0
-        }
+        },
+        color: { value: this.color }
       },
       transparent: true,
       depthWrite: false,
@@ -130,6 +133,8 @@ export class Fireworks {
     }
     
   }
+
+  color: THREE.Color
 
   explodeWorks: THREE.Points<THREE.BufferGeometry<THREE.NormalBufferAttributes>, THREE.ShaderMaterial>
 
