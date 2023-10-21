@@ -9,8 +9,11 @@ import gsap from 'gsap'
 import testVertexShader from './shader/verticxShader.glsl'
 // @ts-ignore
 import testFragmentShader from './shader/fragment.glsl'
+// @ts-ignore
+import { Water } from 'three/examples/jsm/objects/Water'
 // console.log('testVertexShader', testVertexShader)
 // console.log('testFragmentShader', testFragmentShader)
+//console.log( Water)
 
 export function initFlyLight() {
   const scene = new THREE.Scene()
@@ -65,12 +68,29 @@ export function initFlyLight() {
   const dracoLoader = new DRACOLoader()
   dracoLoader.setDecoderPath('draco/')
   loader.setDRACOLoader(dracoLoader)
+
+  loader.loadAsync('/model/flyLight/newyears_min.glb').then(model => {
+    // model.scene.position.z = -10
+    scene.add(model.scene)
+
+    //   创建水面
+    // const waterGeometry = new THREE.PlaneGeometry(100, 100)
+    // let water = new Water(waterGeometry, {
+    //   scale: 4,
+    //   textureHeight: 1024,
+    //   textureWidth: 1024
+    // })
+    // water.position.y = 2
+    // water.rotation.x = -Math.PI / 2
+    // scene.add(water)
+  })
+
   loader.loadAsync('/model/flyLight/flyLight.glb').then(model => {
     // console.log(model.scene.children)
     ;(model.scene.children[0] as any).material = shaderMaterial
     // scene.add(model.scene)
 
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 30; i++) {
       const fly = model.scene.clone(true)
       fly.position.set((Math.random() - 0.5) * 300, (Math.random() - 0.5) * 60 + 25, (Math.random() - 0.5) * 300)
       gsap.to(fly.position, {
@@ -98,7 +118,7 @@ export function initFlyLight() {
     const position = {
       x: (Math.random() - 0.5) * 30,
       z: (Math.random() - 0.5) * 30,
-      y: 7 + (Math.random() - 0.5) * 25
+      y: 50 + Math.random() * 25
     }
 
     const fireworks = new Fireworks(color, position)
@@ -110,8 +130,13 @@ export function initFlyLight() {
 
   function tick() {
     // const time = clock.getElapsedTime()
-    fireWorksArray.forEach(item => {
-      item.update()
+    fireWorksArray.forEach((item, index) => {
+      const res = item.update()
+      //console.log(res)
+      if(res === 'remove'){
+        fireWorksArray.splice(index, 1)
+      }
+
     })
     render.render(scene, camera)
     controls.update()

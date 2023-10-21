@@ -129,6 +129,7 @@ export class Fireworks {
         this.explodeWorks.clear()
         this.explodeFireworks.dispose()
         this.explodeMaterial.dispose()
+        return 'remove'
       }
     }
     
