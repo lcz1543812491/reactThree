@@ -113,12 +113,27 @@ export function vectorPractise() {
   mesh.position.set(0, 50, 0)
   scene.add(mesh)
 
+
+  const spherebox = new THREE.Mesh(
+    new THREE.SphereGeometry(10, 20, 20), 
+    new THREE.MeshBasicMaterial({ color: 0xff0000 })
+  )
+
+  spherebox.position.z = 100
+  spherebox.position.x = 100
+
+  scene.add(spherebox)
+
   const clock = new THREE.Clock()
   let start = 0
   const pre_position = mesh.position
 
   function tick() {
     //console.log(camera.position)
+    const time = clock.getElapsedTime()
+    spherebox.position.z = Math.sin(time)* 100 
+    spherebox.position.x = Math.cos(time)* 100
+
     if (mesh.position.y >= 0) {
       const delta = clock.getDelta()
       start += delta * 0.01

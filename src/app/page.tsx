@@ -78,6 +78,9 @@ export default function Home() {
         <Link href="/vectorPractise" className="text-white">
           Vector Practise
         </Link>
+        <Link href="/cssRender" className="text-white">
+          Css Render
+        </Link>
       </main>
     </main>
   )
