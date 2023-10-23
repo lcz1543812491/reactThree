@@ -84,6 +84,9 @@ export default function Home() {
         <Link href="/transformation" className="text-white">
           Transformation
         </Link>
+        <Link href="/vrHouse" className="text-white">
+          VR House
+        </Link>
       </main>
     </main>
   )
