@@ -23,7 +23,7 @@ export function transformation() {
   scene.add(light)
 
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 900)
-  camera.position.set(0, 5, 30)
+  camera.position.set(1.5, 42, 16)
 
   const axisHelper = new THREE.AxesHelper(100)
   scene.add(axisHelper)
@@ -146,7 +146,8 @@ export function transformation() {
 
   function tick() {
     requestAnimationFrame(tick)
-    const elapsed = clock.getElapsedTime()
+    // console.log(camera.position)
+    //const elapsed = clock.getElapsedTime()
 
     render.render(scene, camera)
     controls.update()
