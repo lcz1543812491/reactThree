@@ -1,6 +1,13 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js'
+// @ts-ignore
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader";
+// @ts-ignore
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
+// @ts-ignore
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader";
+
+
 
 export function transformation() {
   const scene = new THREE.Scene()
@@ -10,8 +17,6 @@ export function transformation() {
   scene.add(dirLight)
   const light = new THREE.AmbientLight(0xffffff, 0.5) // soft white light
   scene.add(light)
-
-  const textureLoader = new THREE.TextureLoader()
 
   const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 900)
   camera.position.set(0, 5, 10)
@@ -36,6 +41,15 @@ export function transformation() {
   // controls.autoRotateSpeed = 0.5
   // controls.maxPolarAngle = Math.PI
   // controls.minPolarAngle = (Math.PI / 4) * 2
+
+  const rGBELoader = new RGBELoader()
+  rGBELoader.load('/texture/038.hdr', (texture: any) => {
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    scene.background = texture;
+    scene.environment = texture;
+  })
+
+
 
   const clock = new THREE.Clock()
   const raycaster = new THREE.Raycaster()
