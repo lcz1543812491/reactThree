@@ -1,9 +1,8 @@
 import * as THREE from 'three'
+import { createSpace } from './createSpace'
+import { createSprite } from './createSprite'
+import gsap from 'gsap'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
-
-const roomIndex = 0
-
-const roomArr = [`${roomIndex}_l`, `${roomIndex}_r`, `${roomIndex}_u`, `${roomIndex}_d`, `${roomIndex}_b`, `${roomIndex}_f`]
 
 let isMouseDown = false
 
@@ -35,23 +34,24 @@ export function vrHouse(canvasRef: HTMLElement) {
   // controls.maxPolarAngle = Math.PI
   // controls.minPolarAngle = (Math.PI / 4) * 2
 
-  const clock = new THREE.Clock()
+  // const clock = new THREE.Clock()
   const raycaster = new THREE.Raycaster()
 
-  const boxGeometry = new THREE.BoxGeometry(10, 10, 10)
-  const boxmaterial = new THREE.MeshBasicMaterial({ color: 0xffff00 })
-  boxGeometry.scale(1, 1, -1)
+  createSpace({ scene, materialIndex: 0, path: '/texture/livingroom/' })
 
-  const materialArr: THREE.MeshBasicMaterial[] = []
-  const textureLoader = new THREE.TextureLoader()
+  const kitchenPosition = new THREE.Vector3(-5, 0, -10)
+  createSpace({euler: new THREE.Euler(0, -Math.PI / 2, 0), scene, materialIndex: 3, path: '/texture/kitchen/', position: kitchenPosition })
+  const clickCalback = () => {
+    //console.log('click')
+    gsap.to(camera.position, {
+      duration: 1,
+      x: kitchenPosition.x,
+      y: kitchenPosition.y,
+      z: kitchenPosition.z
+    })
+  }
 
-  roomArr.forEach(item => {
-    const texture = textureLoader.load(`/texture/livingroom/${item}.jpg`)
-    materialArr.push(new THREE.MeshBasicMaterial({ map: texture }))
-  })
-
-  const box = new THREE.Mesh(boxGeometry, materialArr)
-  scene.add(box)
+  createSprite({ clickCalback: [clickCalback], scene, camera, text: '厨房', position: new THREE.Vector3(-1.5, 0, -4), raycaster })
 
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight
