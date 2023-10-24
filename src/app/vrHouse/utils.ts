@@ -10,7 +10,7 @@ let isMouseDown = false
 export function vrHouse(canvasRef: HTMLElement) {
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 200)
-  camera.position.set(0, 0, 10)
+  camera.position.set(0, 0, 0)
 
   const axisHelper = new THREE.AxesHelper(100)
   scene.add(axisHelper)
@@ -82,9 +82,12 @@ export function vrHouse(canvasRef: HTMLElement) {
     false
   )
 
-  canvasRef.addEventListener('mousemove', (e) => {
-    if(isMouseDown){
-
+  canvasRef.addEventListener('mousemove', e => {
+    // console.log('e', e)
+    if (isMouseDown) {
+      camera.rotation.y += e.movementX * 0.002
+      camera.rotation.x += e.movementY * 0.002
+      camera.rotation.order = 'YXZ'
     }
   })
 
