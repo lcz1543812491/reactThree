@@ -40,7 +40,7 @@ export function vrHouse(canvasRef: HTMLElement) {
   createSpace({ scene, materialIndex: 0, path: '/texture/livingroom/' })
 
   const kitchenPosition = new THREE.Vector3(-5, 0, -10)
-  createSpace({euler: new THREE.Euler(0, -Math.PI / 2, 0), scene, materialIndex: 3, path: '/texture/kitchen/', position: kitchenPosition })
+  createSpace({ euler: new THREE.Euler(0, -Math.PI / 2, 0), scene, materialIndex: 3, path: '/texture/kitchen/', position: kitchenPosition })
   const clickCalback = () => {
     //console.log('click')
     gsap.to(camera.position, {
@@ -51,7 +51,44 @@ export function vrHouse(canvasRef: HTMLElement) {
     })
   }
 
+  const balconyClickCalback = () => {
+    gsap.to(camera.position, {
+      duration: 1,
+      x: 0,
+      y: 0,
+      z: 15
+    })
+  }
+
+  createSprite({ clickCalback: [balconyClickCalback], scene, camera, text: '阳台', position: new THREE.Vector3(0, 0, 3), raycaster })
   createSprite({ clickCalback: [clickCalback], scene, camera, text: '厨房', position: new THREE.Vector3(-1.5, 0, -4), raycaster })
+
+  const livingroomClickCalback = () => {
+    // 让相机移动到客厅
+    // console.log("客厅");
+    gsap.to(camera.position, {
+      duration: 1,
+      x: 0,
+      y: 0,
+      z: 0
+    })
+  }
+
+  createSprite({ clickCalback: [livingroomClickCalback], scene, camera, text: '客厅', position: new THREE.Vector3(-4, 0, -6), raycaster })
+
+  const balconyTolivingroomClickCalback = () => {
+    gsap.to(camera.position, {
+      duration: 1,
+      x: 0,
+      y: 0,
+      z: 0
+    })
+  }
+
+  createSprite({ clickCalback: [balconyTolivingroomClickCalback], scene, camera, text: '客厅', position: new THREE.Vector3(-2, 0, 12), raycaster })
+
+
+  createSpace({ scene, materialIndex: 8, path: '/texture/balcony/', position: new THREE.Vector3(0, 0, 15)  })
 
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight

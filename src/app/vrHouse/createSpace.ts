@@ -5,7 +5,7 @@ interface CreateSpace {
   materialIndex: number
   path: string
   position?: THREE.Vector3
-  euler: THREE.Euler
+  euler?: THREE.Euler
 }
 
 export function createSpace(props: CreateSpace) {
