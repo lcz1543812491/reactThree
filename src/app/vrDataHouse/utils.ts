@@ -52,6 +52,7 @@ export function vrDataHouse(props: { vrdata: VrData }) {
   console.log('vrdata', vrdata.objData.roomList)
   for (let i = 0; i < vrdata.objData.roomList.length; i++) {
     createShape({ areaList: vrdata.objData.roomList[i].areas, scene })
+    createShape({ areaList: vrdata.objData.roomList[i].areas, scene, isTop: true })
   }
 
   window.addEventListener('resize', () => {
