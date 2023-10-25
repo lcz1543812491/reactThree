@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import { createSpace } from './createSpace'
 import { createSprite } from './createSprite'
 import gsap from 'gsap'
+import { Dispatch, SetStateAction } from 'react'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
 interface MoveTag {
@@ -12,36 +13,40 @@ interface MoveTag {
 interface VrHouse {
   canvasRef: HTMLElement
   locationRef: HTMLElement
+  setisLoading: Dispatch<SetStateAction<boolean>>
 }
 
-const roomPositions: { [key: string]: any} = {
+const roomPositions: { [key: string]: any } = {
   客厅: [100, 110],
   厨房: [180, 190],
-  阳台: [50, 50],
-};
+  阳台: [50, 50]
+}
 
 function moveTag(props: MoveTag) {
   const { name, locationRef } = props
-  console.log('locationRef', locationRef.style)
+  //console.log('locationRef', locationRef.style)
 
   if (roomPositions[name]) {
     gsap.to(locationRef.style, {
       duration: 0.5,
       transform: `translateX(${roomPositions[name][0]}px) translateY(${roomPositions[name][1]}px)`,
-      ease: "power3.inOut",
-    });
+      ease: 'power3.inOut'
+    })
   }
 }
-
-
 
 let isMouseDown = false
 
 export function vrHouse(props: VrHouse) {
-
- const { canvasRef, locationRef} = props
+  const { canvasRef, locationRef, setisLoading } = props
 
   const scene = new THREE.Scene()
+  const manager = new THREE.LoadingManager()
+
+  manager.onLoad = () => {
+    setisLoading(false)
+  }
+
   const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 200)
   camera.position.set(0, 0, 0)
 
@@ -71,7 +76,7 @@ export function vrHouse(props: VrHouse) {
   // const clock = new THREE.Clock()
   const raycaster = new THREE.Raycaster()
 
-  createSpace({ scene, materialIndex: 0, path: '/texture/livingroom/' })
+  createSpace({ scene, materialIndex: 0, path: '/texture/livingroom/', manager })
   moveTag({ name: '客厅', locationRef: locationRef })
 
   const kitchenPosition = new THREE.Vector3(-5, 0, -10)
@@ -127,7 +132,7 @@ export function vrHouse(props: VrHouse) {
 
   createSprite({ clickCalback: [balconyTolivingroomClickCalback], scene, camera, text: '客厅', position: new THREE.Vector3(-2, 0, 12), raycaster })
 
-  createSpace({ scene, materialIndex: 8, path: '/texture/balcony/', position: new THREE.Vector3(0, 0, 15)  })
+  createSpace({ scene, materialIndex: 8, path: '/texture/balcony/', position: new THREE.Vector3(0, 0, 15) })
 
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight
