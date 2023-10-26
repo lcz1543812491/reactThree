@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import { AreasItem } from './interface'
 
-export function createShape(props: { areaList: AreasItem[]; scene: THREE.Scene; isTop?: boolean }) {
-  const { areaList, scene, isTop = false } = props
+export function createShape(props: { areaList: AreasItem[]; isTop?: boolean }) {
+  const { areaList, isTop = false } = props
 
   const roomShape = new THREE.Shape()
 
@@ -27,5 +27,5 @@ export function createShape(props: { areaList: AreasItem[]; scene: THREE.Scene; 
   )
   shapeMesh.position.y = isTop ? 2.8 : 0
 
-  scene.add(shapeMesh)
+  return shapeMesh
 }

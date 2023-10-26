@@ -6,6 +6,8 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import gsap from 'gsap'
 import { VrData } from './interface'
 import { createShape } from './createShape'
+import { createWallShader } from './wallShader/wallShader'
+import { createWall } from './wallShader/createWall'
 
 export function vrDataHouse(props: { vrdata: VrData }) {
   const { vrdata } = props
@@ -49,11 +51,52 @@ export function vrDataHouse(props: { vrdata: VrData }) {
   scene.background = texture
   scene.environment = texture
 
-  console.log('vrdata', vrdata.objData.roomList)
+  // console.log('vrdata', vrdata.wallRelation)
+  const idToPanorama: { [key: string]: any } = {}
+
   for (let i = 0; i < vrdata.objData.roomList.length; i++) {
-    createShape({ areaList: vrdata.objData.roomList[i].areas, scene })
-    createShape({ areaList: vrdata.objData.roomList[i].areas, scene, isTop: true })
+   const roomitem =  vrdata.objData.roomList[i]
+
+    const room1 = createShape({ areaList: roomitem.areas })
+    const room2 = createShape({ areaList: roomitem.areas, isTop: true })
+    scene.add(room1, room2)
+
+    for (let j = 0; j < vrdata.panoramaLocation.length; j++) {
+      const panorama = vrdata.panoramaLocation[j];
+      if (panorama.roomId === roomitem.roomId) {
+        (panorama as any)['material'] = createWallShader(panorama);;
+        idToPanorama[panorama.roomId] = panorama
+      }
+    }
+
+    // console.log('room1', room1.material.side)
+    // console.log('room2', room2.material.side)
+
+    room1.material = idToPanorama[roomitem.roomId].material;
+    room1.material.side = THREE.DoubleSide;
+
+    room2.material = idToPanorama[roomitem.roomId].material.clone();
+    room2.material.side = THREE.FrontSide;
+    
+    for (let i = 0; i < vrdata.wallRelation.length; i++) {
+      const wallPoints = vrdata.wallRelation[i].wallPoints;
+      const faceRelation = vrdata.wallRelation[i].faceRelation;
+
+      faceRelation.forEach((item: any) => {
+        item['panorama'] = idToPanorama[item.roomId];
+      });
+
+      const mesh = createWall({wallPoints, faceRelation});
+      //scene.add(mesh);
+    }
+
+
   }
+
+
+  
+
+  //console.log('idToPanorama', idToPanorama)
 
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight

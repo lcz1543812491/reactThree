@@ -1,4 +1,3 @@
-import { useEffect, useRef } from 'react'
 import { ServerComponent } from './serverComponent'
 
 export default function Three() {
