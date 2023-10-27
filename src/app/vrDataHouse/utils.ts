@@ -15,7 +15,8 @@ export function vrDataHouse(props: { vrdata: VrData }) {
   const scene = new THREE.Scene()
 
   const camera = new THREE.PerspectiveCamera(75, (window as Window).innerWidth / (window as Window).innerHeight)
-  camera.position.z = 15
+  //camera.position.z = 15
+  camera.position.set(3, 7.8, -3)
   scene.add(camera)
 
   //   const axisHelper = new THREE.AxesHelper()
@@ -103,6 +104,7 @@ export function vrDataHouse(props: { vrdata: VrData }) {
 
   function tick() {
     // const time = clock.getElapsedTime()
+    //console.log(camera.position)
 
     render.render(scene, camera)
     requestAnimationFrame(tick)
