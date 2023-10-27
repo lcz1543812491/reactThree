@@ -46,25 +46,25 @@ export function vrDataHouse(props: { vrdata: VrData }) {
   //   })
 
   const textureloader = new THREE.TextureLoader()
-  const texture = textureloader.load('/texture/vrHouse/HdrSkyCloudy004_JPG_8K.jpg')
-  texture.mapping = THREE.EquirectangularReflectionMapping
-  scene.background = texture
-  scene.environment = texture
+  // const texture = textureloader.load('/texture/vrHouse/HdrSkyCloudy004_JPG_8K.jpg')
+  // texture.mapping = THREE.EquirectangularReflectionMapping
+  // scene.background = texture
+  // scene.environment = texture
 
   // console.log('vrdata', vrdata.wallRelation)
   const idToPanorama: { [key: string]: any } = {}
 
   for (let i = 0; i < vrdata.objData.roomList.length; i++) {
-   const roomitem =  vrdata.objData.roomList[i]
+    const roomitem = vrdata.objData.roomList[i]
 
     const room1 = createShape({ areaList: roomitem.areas })
     const room2 = createShape({ areaList: roomitem.areas, isTop: true })
     scene.add(room1, room2)
 
     for (let j = 0; j < vrdata.panoramaLocation.length; j++) {
-      const panorama = vrdata.panoramaLocation[j];
+      const panorama = vrdata.panoramaLocation[j]
       if (panorama.roomId === roomitem.roomId) {
-        (panorama as any)['material'] = createWallShader(panorama);;
+        ;(panorama as any)['material'] = createWallShader(panorama)
         idToPanorama[panorama.roomId] = panorama
       }
     }
@@ -72,31 +72,28 @@ export function vrDataHouse(props: { vrdata: VrData }) {
     // console.log('room1', room1.material.side)
     // console.log('room2', room2.material.side)
 
-    room1.material = idToPanorama[roomitem.roomId].material;
-    room1.material.side = THREE.DoubleSide;
+    room1.material = idToPanorama[roomitem.roomId].material
+    room1.material.side = THREE.DoubleSide
 
-    room2.material = idToPanorama[roomitem.roomId].material.clone();
-    room2.material.side = THREE.FrontSide;
-    
-    for (let i = 0; i < vrdata.wallRelation.length; i++) {
-      const wallPoints = vrdata.wallRelation[i].wallPoints;
-      const faceRelation = vrdata.wallRelation[i].faceRelation;
-
-      faceRelation.forEach((item: any) => {
-        item['panorama'] = idToPanorama[item.roomId];
-      });
-
-      const mesh = createWall({wallPoints, faceRelation});
-      //scene.add(mesh);
-    }
-
-
+    room2.material = idToPanorama[roomitem.roomId].material.clone()
+    room2.material.side = THREE.FrontSide
   }
 
+  for (let i = 0; i < vrdata.wallRelation.length; i++) {
+    const wallPoints = vrdata.wallRelation[i].wallPoints
+    const faceRelation = vrdata.wallRelation[i].faceRelation
 
-  
+    const faceRelation1 = faceRelation.map((item: any) => {
+      // debugger
+      return { ...item, panorama: idToPanorama[item.roomId] }
+      // item['panorama'] = idToPanorama[item.roomId];
+    })
 
-  //console.log('idToPanorama', idToPanorama)
+    // console.log('faceRelation', faceRelation1)
+
+    const mesh = createWall({ wallPoints, faceRelation: faceRelation1 })
+    scene.add(mesh)
+  }
 
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight

@@ -88,13 +88,13 @@ export function vectorPractise() {
   const a2_dir = a2.clone().normalize()
   const length3 = a2.length()
   const arrowHelper3 = new THREE.ArrowHelper(a2_dir, origin1, length3, 0xffff00)
-  scene.add(arrowHelper3)
+  // scene.add(arrowHelper3)
 
   const b2 = b1.clone().sub(origin1)
   const b2_dir = b2.clone().normalize()
   const length4 = b2.length()
   const arrowHelper4 = new THREE.ArrowHelper(b2_dir, origin1, length4, 0x00ff00)
-  scene.add(arrowHelper4)
+  // scene.add(arrowHelper4)
 
   const cross = new THREE.Vector3()
   cross.crossVectors(b1, a1)
@@ -103,7 +103,7 @@ export function vectorPractise() {
   const cross1_dir = cross1.clone().normalize()
   const length5 = cross1.length()
   const arrowHelper5 = new THREE.ArrowHelper(cross1_dir, origin1, 90, 0x00ffff)
-  scene.add(arrowHelper5)
+  // scene.add(arrowHelper5)
 
   const v = new THREE.Vector3(30, 40, 0)
   const g = new THREE.Vector3(0, -9.8, 0)
@@ -111,18 +111,59 @@ export function vectorPractise() {
   const material1 = new THREE.MeshPhysicalMaterial({ color: 0x00ffff, roughness: 1, metalness: 0.2 })
   const mesh = new THREE.Mesh(gemeory, material1)
   mesh.position.set(0, 50, 0)
-  scene.add(mesh)
+  // scene.add(mesh)
 
-
-  const spherebox = new THREE.Mesh(
-    new THREE.SphereGeometry(10, 20, 20), 
-    new THREE.MeshBasicMaterial({ color: 0xff0000 })
-  )
+  const spherebox = new THREE.Mesh(new THREE.SphereGeometry(10, 20, 20), new THREE.MeshBasicMaterial({ color: 0xff0000 }))
 
   spherebox.position.z = 100
   spherebox.position.x = 100
 
-  scene.add(spherebox)
+  // scene.add(spherebox)
+
+  const points = new Float32Array([
+    481.80078125, 403.0867004394531, 0, 461.80078125, 403.0867004394531, 0, 461.80078125, 592.3276977539062, 0, 481.80078125, 612.3276977539062, 0, 461.80078125, 403.0867004394531, 280, 481.80078125, 403.0867004394531, 280, 481.80078125, 612.3276977539062, 280, 461.80078125, 592.3276977539062, 280
+  ])
+  points.forEach(item => {
+    item = item / 100
+  })
+  const temp1 = points.slice(0, 3)
+  const temp2 = points.slice(3, 6)
+  console.log('temp2', temp2)
+
+  const geometry1 = new THREE.BufferGeometry()
+  geometry1.attributes.position = new THREE.BufferAttribute(temp1, 3)
+
+  const geometry2 = new THREE.BufferGeometry()
+  geometry2.attributes.position = new THREE.BufferAttribute(temp2, 3)
+
+  const point1 = new THREE.Points(
+    geometry1,
+    new THREE.PointsMaterial({
+      color: 0xff0000,
+      size: 30
+    })
+  )
+
+
+  const point2 = new THREE.Points(
+    geometry2,
+    new THREE.PointsMaterial({
+      color: 0x00ff00,
+      size: 30
+    })
+  )
+
+  scene.add(point1)
+  scene.add(point2)
+
+  // const mesh1 = new THREE.Mesh(
+  // 	geometry,
+  // 	new THREE.MeshBasicMaterial({
+  // 		color: 0xff0000,
+  // 		side: THREE.DoubleSide
+  // 	})
+  // 	);
+  // scene.add(mesh1);
 
   const clock = new THREE.Clock()
   let start = 0
@@ -131,8 +172,8 @@ export function vectorPractise() {
   function tick() {
     //console.log(camera.position)
     const time = clock.getElapsedTime()
-    spherebox.position.z = Math.sin(time)* 100 
-    spherebox.position.x = Math.cos(time)* 100
+    spherebox.position.z = Math.sin(time) * 100
+    spherebox.position.x = Math.cos(time) * 100
 
     if (mesh.position.y >= 0) {
       const delta = clock.getDelta()
