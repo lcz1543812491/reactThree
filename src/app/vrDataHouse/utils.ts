@@ -1,22 +1,51 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import gsap from 'gsap'
-import { VrData } from './interface'
+import { VrData, PanoramaLocationItem } from './interface'
 import { createShape } from './createShape'
 import { createWallShader } from './wallShader/wallShader'
 import { createWall } from './wallShader/createWall'
 
+let roomIndex = 0
+let timeline = gsap.timeline()
+let dir = new THREE.Vector3()
+let panoramaLocation: PanoramaLocationItem[]
+let cameraGlobal: THREE.Camera
+let controlsGlobal: any
+
+export function changeRoom() {
+  let room = panoramaLocation[roomIndex]
+  dir = cameraGlobal.position
+    .clone()
+    .sub(new THREE.Vector3(room.point[0].x / 100, room.point[0].z / 100, room.point[0].y / 100))
+    .normalize()
+
+  timeline.to(cameraGlobal.position, {
+    duration: 1,
+    x: room.point[0].x / 100 + dir.x * 0.1,
+    y: room.point[0].z / 100,
+    z: room.point[0].y / 100 + dir.z * 0.1
+  })
+  cameraGlobal.lookAt(room.point[0].x / 100, room.point[0].z / 100, room.point[0].y / 100)
+  controlsGlobal.target.set(room.point[0].x / 100, room.point[0].z / 100, room.point[0].y / 100)
+  roomIndex++
+  if (roomIndex >= panoramaLocation.length) {
+    roomIndex = 0
+  }
+}
+
 export function vrDataHouse(props: { vrdata: VrData }) {
   const { vrdata } = props
+  // console.log('vrdata', vrdata.panoramaLocation)
+  panoramaLocation = vrdata.panoramaLocation
 
   const scene = new THREE.Scene()
 
   const camera = new THREE.PerspectiveCamera(75, (window as Window).innerWidth / (window as Window).innerHeight)
   //camera.position.z = 15
   camera.position.set(3, 7.8, -3)
+  cameraGlobal = camera
   scene.add(camera)
 
   //   const axisHelper = new THREE.AxesHelper()
@@ -32,10 +61,11 @@ export function vrDataHouse(props: { vrdata: VrData }) {
 
   const controls = new OrbitControls(camera, render.domElement)
   controls.enableDamping = true
+  controlsGlobal = controls
 
-  const clock = new THREE.Clock()
+  // const clock = new THREE.Clock()
 
-  const loader = new GLTFLoader()
+  // const loader = new GLTFLoader()
 
   //   const dracoLoader = new DRACOLoader()
   //   dracoLoader.setDecoderPath('draco/')
