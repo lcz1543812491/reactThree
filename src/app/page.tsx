@@ -91,6 +91,11 @@ export default function Home() {
           VR Data House
         </Link>
       </main>
+      <main className="flex min-h-screen flex-col items-center p-24 bg-black gap-8">
+        <Link href="/smartCity" className="text-white text-center">
+          Smart City
+        </Link>
+      </main>
     </main>
   )
 }
