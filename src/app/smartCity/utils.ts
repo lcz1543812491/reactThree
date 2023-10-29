@@ -36,8 +36,8 @@ export function smartCity() {
   // const clock = new THREE.Clock()
   // const raycaster = new THREE.Raycaster()
 
-  const ambentLight = new THREE.AmbientLight(0xffffff, 10)
-  scene.add(ambentLight)
+  const ambentLight = new THREE.AmbientLight(0xffffff, 2)
+  //scene.add(ambentLight)
 
   createCity({ scene })
 

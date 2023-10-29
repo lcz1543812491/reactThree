@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
+import { modifyMaterial } from './modifyMaterial'
 
 interface CreateCity {
   scene: THREE.Scene
@@ -14,10 +15,14 @@ export function createCity(props: CreateCity) {
   dracoLoader.setDecoderPath('draco/')
   loader.setDRACOLoader(dracoLoader)
   loader.load('/model/smartCity/city.glb', model => {
-    console.log('model', model)
+    // console.log('model', model)
+
+    const meshBasicMaterial = new THREE.MeshBasicMaterial({ color: new THREE.Color('#0c0e6f') })
+
     model.scene.traverse((child: any) => {
       if (child.type === 'Mesh') {
-        child.material = new THREE.MeshBasicMaterial({ color: new THREE.Color(0x00ffff) })
+        child.material = meshBasicMaterial
+        modifyMaterial({ mesh: child })
       }
     })
     scene.add(model.scene)
