@@ -8,7 +8,7 @@ export function smartCity() {
   // const manager = new THREE.LoadingManager()
 
   const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 50000)
-  camera.position.set(0, 0, 10)
+  camera.position.set(-20, 11, 11)
 
   const axisHelper = new THREE.AxesHelper(100)
   scene.add(axisHelper)
@@ -44,7 +44,7 @@ export function smartCity() {
   function tick() {
     requestAnimationFrame(tick)
     // const elapsed = clock.getElapsedTime()
-
+    // console.log(camera.position)
     render.render(scene, camera)
     controls.update()
   }
