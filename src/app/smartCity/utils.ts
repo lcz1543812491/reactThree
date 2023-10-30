@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import gsap from 'gsap'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { createCity } from './createCity'
+import { createFlyLine } from './createFlyLine'
 
 export function smartCity() {
   const scene = new THREE.Scene()
@@ -40,6 +41,7 @@ export function smartCity() {
   //scene.add(ambentLight)
 
   createCity({ scene })
+  createFlyLine({ scene })
 
   function tick() {
     requestAnimationFrame(tick)
