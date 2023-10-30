@@ -19,6 +19,7 @@ export function modifyMaterial(props: ModifyMaterial) {
     addGradientColor({ mesh, shader })
     addSpread({ shader })
     addLine({ shader })
+    addVertical({ shader })
   }
 }
 
@@ -172,4 +173,43 @@ export function addLine(props: AddSpread){
     ease: 'none',
     repeat: -1
   })
+}
+
+export function addVertical(props: AddSpread){
+  const { shader } = props
+  shader.uniforms.uTopWidth = { value: 40 }
+  shader.uniforms.uTime2 = { value: 0 }
+
+  shader.fragmentShader = shader.fragmentShader.replace(
+    '#include <common>',
+    `
+            #include <common>
+            uniform float uTopWidth;
+            uniform float uTime2;
+            `
+  )
+
+  shader.fragmentShader = shader.fragmentShader.replace(
+    '//#end#',
+
+    `
+     float distance2 = vPosition.y - uTime2;
+
+     float strength2 = - distance2 * distance2 + uTopWidth;
+
+     vec4 mixColor2 = mix(gl_FragColor, vec4(1.0, 1.0, 1.0, 1.0), strength2 / uTopWidth);
+
+     gl_FragColor = strength2 > 0.0 ? mixColor2: gl_FragColor;
+
+    //#end#
+    `
+  )
+
+  gsap.to(shader.uniforms.uTime2, {
+    value: 800,
+    duration: 2,
+    ease: 'none',
+    repeat: -1
+  })
+  
 }
