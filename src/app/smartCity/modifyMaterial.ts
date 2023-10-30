@@ -18,6 +18,7 @@ export function modifyMaterial(props: ModifyMaterial) {
     )
     addGradientColor({ mesh, shader })
     addSpread({ shader })
+    addLine({ shader })
   }
 }
 
@@ -41,8 +42,8 @@ export function addGradientColor(props: AddGradientColor) {
   const uHeight = max.y - min.y
   //console.log('uHeight', uHeight)
 
-  console.log(shader.vertexShader)
-  console.log(shader.fragmentShader)
+  // console.log(shader.vertexShader)
+  // console.log(shader.fragmentShader)
 
   shader.uniforms.uTopColor = {
     value: new THREE.Color('#aaaeff')
@@ -127,6 +128,45 @@ export function addSpread(props: AddSpread) {
   )
 
   gsap.to(shader.uniforms.uTime, {
+    value: 800,
+    duration: 3,
+    ease: 'none',
+    repeat: -1
+  })
+}
+
+export function addLine(props: AddSpread){
+  const { shader } = props
+
+  shader.uniforms.uLineWidth = { value: 40 }
+  shader.uniforms.uTime1 = { value: 0 }
+
+  shader.fragmentShader = shader.fragmentShader.replace(
+    '#include <common>',
+    `
+            #include <common>
+            uniform float uLineWidth;
+            uniform float uTime1;
+            `
+  )
+
+  shader.fragmentShader = shader.fragmentShader.replace(
+    '//#end#',
+
+    `
+     float distance1 = vPosition.x + vPosition.z* 0.2 - uTime1;
+
+     float strength1 = - distance1 * distance1 + uLineWidth;
+
+     vec4 mixColor1 = mix(gl_FragColor, vec4(1.0, 1.0, 1.0, 1.0), strength1 / uLineWidth);
+
+     gl_FragColor = strength1 > 0.0 ? mixColor1: gl_FragColor;
+
+    //#end#
+    `
+  )
+
+  gsap.to(shader.uniforms.uTime1, {
     value: 800,
     duration: 3,
     ease: 'none',
