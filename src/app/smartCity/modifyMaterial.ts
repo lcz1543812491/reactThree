@@ -207,7 +207,7 @@ export function addVertical(props: AddSpread){
 
   gsap.to(shader.uniforms.uTime2, {
     value: 800,
-    duration: 2,
+    duration: 4,
     ease: 'none',
     repeat: -1
   })
