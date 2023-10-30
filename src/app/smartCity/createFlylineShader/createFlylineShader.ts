@@ -24,6 +24,15 @@ export function createFlylineShader(props: CreateFlylineShader) {
 
   const points = lineCurve.getPoints(1000)
   const geometry = new THREE.BufferGeometry().setFromPoints(points)
+  
+
+  const sizeArray = new Float32Array(points.length)
+
+  for(let i = 0; i < points.length; i++){
+    sizeArray[i] = i
+  }
+
+  geometry.setAttribute('aSize', new THREE.BufferAttribute(sizeArray, 1))
 
   const shaderMaterial = new THREE.ShaderMaterial({
     vertexShader: VertexShader,
