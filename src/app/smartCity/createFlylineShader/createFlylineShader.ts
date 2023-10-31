@@ -4,7 +4,6 @@ import gsap from 'gsap'
 import FragmentShader from './shader/fragment.glsl'
 // @ts-ignore
 import VertexShader from './shader/verticxShader.glsl'
-import { uniform } from 'three/examples/jsm/nodes/Nodes.js'
 // console.log('FragmentShader', FragmentShader)
 // console.log('VertexShader', VertexShader)
 

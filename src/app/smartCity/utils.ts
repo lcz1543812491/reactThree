@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { createCity } from './createCity'
 import { createFlyLine } from './createFlyLine'
 import { createFlylineShader } from './createFlylineShader/createFlylineShader'
+import { createLightWall } from './createLightWall/createLightWall'
 
 
 export function smartCity() {
@@ -23,8 +24,8 @@ export function smartCity() {
     logarithmicDepthBuffer: true
   })
   render.setSize(window.innerWidth, window.innerHeight)
-  //   render.shadowMap.enabled = true
-  //   render.shadowMap.type = THREE.PCFSoftShadowMap
+  render.shadowMap.enabled = true
+  render.shadowMap.type = THREE.PCFSoftShadowMap
   render.outputColorSpace = THREE.SRGBColorSpace
   //render.toneMapping = THREE.ACESFilmicToneMapping
   //render.toneMappingExposure = 0.1
@@ -46,6 +47,8 @@ export function smartCity() {
   createFlyLine({ scene })
 
   createFlylineShader({ scene })
+
+  createLightWall({ scene })
 
   
 
