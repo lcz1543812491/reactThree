@@ -1,8 +1,10 @@
 import * as THREE from 'three'
+import gsap from 'gsap'
 // @ts-ignore
 import FragmentShader from './shader/fragment.glsl'
 // @ts-ignore
 import VertexShader from './shader/verticxShader.glsl'
+import { uniform } from 'three/examples/jsm/nodes/Nodes.js'
 // console.log('FragmentShader', FragmentShader)
 // console.log('VertexShader', VertexShader)
 
@@ -35,6 +37,11 @@ export function createFlylineShader(props: CreateFlylineShader) {
   geometry.setAttribute('aSize', new THREE.BufferAttribute(sizeArray, 1))
 
   const shaderMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+      uColor: { value: new THREE.Color(0xffff00) },
+      uLength: { value: sizeArray.length }
+    },
     vertexShader: VertexShader,
     fragmentShader: FragmentShader,
     transparent: true,
@@ -45,4 +52,11 @@ export function createFlylineShader(props: CreateFlylineShader) {
 
   const meshs = new THREE.Points(geometry, shaderMaterial)
   scene.add(meshs)
+
+  gsap.to(shaderMaterial.uniforms.uTime, {
+    duration: 3,
+    value: 1000,
+    repeat: -1,
+    ease: 'none'
+  })
 }
