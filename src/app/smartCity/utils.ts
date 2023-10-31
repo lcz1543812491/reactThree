@@ -5,7 +5,7 @@ import { createCity } from './createCity'
 import { createFlyLine } from './createFlyLine'
 import { createFlylineShader } from './createFlylineShader/createFlylineShader'
 import { createLightWall } from './createLightWall/createLightWall'
-
+import { createRadar } from './createRadar/createRadar'
 
 export function smartCity() {
   const scene = new THREE.Scene()
@@ -49,6 +49,8 @@ export function smartCity() {
   createFlylineShader({ scene })
 
   createLightWall({ scene })
+
+  createRadar({ scene })
 
   
 
