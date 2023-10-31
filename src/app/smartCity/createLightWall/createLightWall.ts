@@ -20,9 +20,9 @@ export function createLightWall(props: CreateLightWall) {
     vertexShader: VertexShader,
     transparent: true,
     side: THREE.DoubleSide,
-    depthTest: false,
+    depthTest: true,
     depthWrite: true,
-    // blending: THREE.AdditiveBlending
+    // blending: THREE.NormalBlending
   })
 
   const mesh = new THREE.Mesh(geometry, shaderMaterial)

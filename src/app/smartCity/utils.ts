@@ -20,8 +20,8 @@ export function smartCity() {
   const render = new THREE.WebGLRenderer({
     antialias: true,
     canvas: document.getElementById('galaxy') as HTMLCanvasElement,
-    alpha: true,
-    logarithmicDepthBuffer: true
+    // alpha: true,
+    // logarithmicDepthBuffer: true
   })
   render.setSize(window.innerWidth, window.innerHeight)
   render.shadowMap.enabled = true
