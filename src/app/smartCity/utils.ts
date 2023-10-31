@@ -5,6 +5,7 @@ import { createCity } from './createCity'
 import { createFlyLine } from './createFlyLine'
 import { createFlylineShader } from './createFlylineShader/createFlylineShader'
 
+
 export function smartCity() {
   const scene = new THREE.Scene()
   // const manager = new THREE.LoadingManager()
@@ -45,6 +46,8 @@ export function smartCity() {
   createFlyLine({ scene })
 
   createFlylineShader({ scene })
+
+  
 
   function tick() {
     requestAnimationFrame(tick)
