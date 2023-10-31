@@ -6,6 +6,7 @@ import { createFlyLine } from './createFlyLine'
 import { createFlylineShader } from './createFlylineShader/createFlylineShader'
 import { createLightWall } from './createLightWall/createLightWall'
 import { createRadar } from './createRadar/createRadar'
+import { createAlarmSprite } from './createAlarmSprite/createAlarmSprite'
 
 export function smartCity() {
   const scene = new THREE.Scene()
@@ -19,7 +20,7 @@ export function smartCity() {
 
   const render = new THREE.WebGLRenderer({
     antialias: true,
-    canvas: document.getElementById('galaxy') as HTMLCanvasElement,
+    canvas: document.getElementById('galaxy') as HTMLCanvasElement
     // alpha: true,
     // logarithmicDepthBuffer: true
   })
@@ -52,7 +53,19 @@ export function smartCity() {
 
   createRadar({ scene })
 
-  
+  createAlarmSprite({
+    scene,
+    camera,
+    callBack: (e: MouseEvent) => {
+      console.log('警告')
+    }
+  })
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight
+    camera.updateProjectionMatrix()
+    render.setSize(window.innerWidth, window.innerHeight)
+  })
 
   function tick() {
     requestAnimationFrame(tick)
