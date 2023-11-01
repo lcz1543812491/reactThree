@@ -16,7 +16,7 @@ void main()
     vSize = vSize + uLength;
   }
 
-  vSize = (vSize - 500.0) * 0.1;
+  vSize = (vSize - 500.0) * 0.3;
 
   gl_PointSize = -vSize/viewPosition.z;
 
