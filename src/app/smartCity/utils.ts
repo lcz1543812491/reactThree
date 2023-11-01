@@ -7,6 +7,7 @@ import { createFlylineShader } from './createFlylineShader/createFlylineShader'
 import { createLightWall } from './createLightWall/createLightWall'
 import { createRadar } from './createRadar/createRadar'
 import { createAlarmSprite } from './createAlarmSprite/createAlarmSprite'
+import { createEnvironment } from './createEnvironment'
 
 export function smartCity() {
   const scene = new THREE.Scene()
@@ -60,6 +61,8 @@ export function smartCity() {
       console.log('警告')
     }
   })
+
+  createEnvironment({ scene })
 
   window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight
