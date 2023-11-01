@@ -14,4 +14,4 @@ void main()
     // gl_FragColor = vec4(vRandom, vRandom * 0.2, 1.0, 1.0);
     textureColor.rgb *= velevation * 2.0 + 0.5;
     gl_FragColor = textureColor;
-}
+} 

@@ -1,12 +1,5 @@
-'use client'
-import { smartCity } from './utils'
-import { useEffect } from 'react'
+import { ServerComponent } from './server'
 
 export default function Three() {
-
-  useEffect(() => {
-    smartCity()
-  }, [])
-
-  return <canvas id="galaxy" style={{ width: '100vw', height: '100vh', background: 'black' }}></canvas>
+  return <ServerComponent />
 }
