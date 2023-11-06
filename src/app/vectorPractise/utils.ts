@@ -1,3 +1,4 @@
+import { useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 
@@ -108,9 +109,17 @@ export function vectorPractise() {
   const v = new THREE.Vector3(30, 40, 0)
   const g = new THREE.Vector3(0, -9.8, 0)
   const gemeory = new THREE.BoxGeometry(5, 5, 5)
-  const material1 = new THREE.MeshPhysicalMaterial({ color: 0x00ffff, roughness: 1, metalness: 0.2 })
+  const material1 = new THREE.MeshPhysicalMaterial({ color: 0x00ffff, roughness: 1, metalness: 0.2, wireframe: true })
   const mesh = new THREE.Mesh(gemeory, material1)
-  mesh.position.set(0, 50, 0)
+
+  // gemeory.setAttribute('position', new THREE.BufferAttribute(new Float32Array([0, 50, 0]), 3))
+  // gemeory.attributes.position = new THREE.BufferAttribute(new Float32Array(new THREE.Vector3(0, 50, 0)), 3)
+  // mesh.position.set(0, 50, 0)
+  mesh.geometry.translate(0, 50, 0)
+  const meshAxesHelper = new THREE.AxesHelper(50)
+  mesh.add(meshAxesHelper)
+  console.log('gemeory', gemeory.attributes.uv)
+
   // scene.add(mesh)
 
   const spherebox = new THREE.Mesh(new THREE.SphereGeometry(10, 20, 20), new THREE.MeshBasicMaterial({ color: 0xff0000 }))
@@ -144,7 +153,6 @@ export function vectorPractise() {
     })
   )
 
-
   const point2 = new THREE.Points(
     geometry2,
     new THREE.PointsMaterial({
@@ -153,8 +161,8 @@ export function vectorPractise() {
     })
   )
 
-  scene.add(point1)
-  scene.add(point2)
+  // scene.add(point1)
+  // scene.add(point2)
 
   // const mesh1 = new THREE.Mesh(
   // 	geometry,
@@ -169,8 +177,203 @@ export function vectorPractise() {
   let start = 0
   const pre_position = mesh.position
 
+  //CircleGeometry的顶点UV坐标是按照圆形采样纹理贴图
+  const geometry = new THREE.CircleGeometry(60, 100)
+  //纹理贴图加载器TextureLoader
+  const texLoader = new THREE.TextureLoader()
+  const texture = texLoader.load('/texture/texture-1.png')
+
+  console.log('texture', texture)
+
+  texture.wrapS = THREE.RepeatWrapping
+  texture.wrapT = THREE.RepeatWrapping
+
+  texture.repeat.set(12, 12)
+
+  const material = new THREE.MeshBasicMaterial({
+    map: texture, //map表示材质的颜色贴图属性
+    side: THREE.DoubleSide
+  })
+  const mesh2 = new THREE.Mesh(geometry, material)
+  console.log('mesh2', mesh2.geometry.attributes.uv)
+  // scene.add(mesh2)
+
+  const geometry3 = new THREE.BufferGeometry() //创建一个几何体对象
+  const R = 100 //圆弧半径
+  const N = 50 //分段数量
+  const sp = (2 * Math.PI) / N //两个相邻点间隔弧度
+  // 批量生成圆弧上的顶点数据
+  const arr = []
+  for (let i = 0; i < N; i++) {
+    const angle = sp * i //当前点弧度
+    // 以坐标原点为中心，在XOY平面上生成圆弧上的顶点数据
+    const x = R * Math.cos(angle)
+    const y = R * Math.sin(angle)
+    arr.push(x, y, 0)
+  }
+
+  // console.log('arr', arr)
+
+  //类型数组创建顶点数据
+  const vertices = new Float32Array(arr)
+  // 创建属性缓冲区对象
+  //3个为一组，表示一个顶点的xyz坐标
+  const attribue = new THREE.BufferAttribute(vertices, 3)
+  // 设置几何体attributes属性的位置属性
+  geometry3.attributes.position = attribue
+
+  // 线材质
+  const material2 = new THREE.LineBasicMaterial({
+    color: 0xff0000 //线条颜色
+  })
+  // 创建线模型对象   构造函数：Line、LineLoop、LineSegments
+  // const line = new THREE.Line(geometry, material);
+  const line = new THREE.LineLoop(geometry3, material2) //线条模型对象
+  // scene.add(line)
+
+  const arc = new THREE.EllipseCurve(0, 0, 100, 50)
+  //getPoints是基类Curve的方法，平面曲线会返回一个vector2对象作为元素组成的数组
+  const pointsArr = arc.getPoints(50) //分段数50，返回51个顶点
+  // console.log('曲线上获取坐标', pointsArr)
+  const geometry4 = new THREE.BufferGeometry()
+  geometry4.setFromPoints(pointsArr)
+
+  const material5 = new THREE.PointsMaterial({
+    color: 0xffff00,
+    size: 10.0 //点对象像素尺寸
+  })
+  // 点模型
+  const points1 = new THREE.Points(geometry4, material5)
+  // scene.add(points1)
+
+  // 三维向量Vector3创建一组顶点坐标
+  const arr2 = [new THREE.Vector3(-50, 20, 90), new THREE.Vector3(-10, 40, 40), new THREE.Vector3(0, 0, 0), new THREE.Vector3(60, -60, 0), new THREE.Vector3(70, 0, 80)]
+  // 三维样条曲线
+  const curve = new THREE.CatmullRomCurve3(arr2)
+
+  //曲线上获取点
+  const pointsArr1 = curve.getPoints(100)
+  const geometry6 = new THREE.BufferGeometry()
+  //读取坐标数据赋值给几何体顶点
+  geometry6.setFromPoints(pointsArr1)
+  // 线材质
+  const material6 = new THREE.LineBasicMaterial({
+    color: 0x00fffff
+  })
+  // 线模型
+  const line1 = new THREE.Line(geometry6, material6)
+  // scene.add(line1)
+
+  // p1、p2、p3表示三个点坐标
+  const p1 = new THREE.Vector3(-80, 0, 0)
+  const p2 = new THREE.Vector3(20, 100, 0)
+  const p3 = new THREE.Vector3(80, 0, 100)
+  // 三维二次贝赛尔曲线
+  const curve2 = new THREE.QuadraticBezierCurve3(p1, p2, p3)
+
+  const geometry9 = new THREE.BufferGeometry()
+  const material7 = new THREE.LineBasicMaterial({
+    color: 0x00fffff
+  })
+
+  const points9 = curve2.getPoints()
+  geometry9.setFromPoints(points9)
+
+  const line11 = new THREE.Line(geometry9, material7)
+
+  // scene.add(line11)
+
+  // Vector2表示的三个点坐标，三个点构成的轮廓相当于两端直线相连接
+  const pointsArr11 = [new THREE.Vector2(50, 60), new THREE.Vector2(25, 0), new THREE.Vector2(50, -60)]
+  // LatheGeometry：pointsArr轮廓绕y轴旋转生成几何体曲面
+  // pointsArr：旋转几何体的旋转轮廓形状
+  const geometry11 = new THREE.LatheGeometry(pointsArr11)
+
+  const mesh21 = new THREE.Mesh(geometry11, new THREE.MeshBasicMaterial({ color: 0xffff00 }))
+  // scene.add(mesh21)
+
+  // 扫描轮廓：Shape表示一个平面多边形轮廓
+  const shape = new THREE.Shape([
+    // 按照特定顺序，依次书写多边形顶点坐标
+    new THREE.Vector2(0, 0), //多边形起点
+    new THREE.Vector2(0, 10),
+    new THREE.Vector2(10, 10),
+    new THREE.Vector2(10, 0)
+  ])
+
+  //扫描造型：扫描默认没有倒角
+  const geometry12 = new THREE.ExtrudeGeometry(
+    shape, //扫描轮廓
+    {
+      extrudePath: curve, //扫描轨迹
+      steps: 100 //沿着路径细分精度，越大越光滑
+    }
+  )
+
+  const mesh22 = new THREE.Mesh(geometry12, new THREE.MeshPhysicalMaterial({ color: 0x00ffff }))
+
+  // scene.add(mesh22)
+
+  // const colors = new Float32Array([
+  //   1,
+  //   0,
+  //   0, //顶点1颜色
+  //   0,
+  //   0,
+  //   1, //顶点2颜色
+  //   0,
+  //   1,
+  //   0 //顶点3颜色
+  // ])
+
+  // const geometry13 = new THREE.BufferGeometry()
+
+  // geometry13.attributes.color = new THREE.BufferAttribute(colors, 3)
+  // geometry13.setFromPoints(points9)
+
+  // const material12 = new THREE.LineBasicMaterial({
+  //   // vertexColors: true, //使用顶点颜色渲染
+  //   linewidth: 10,
+  //   side: THREE.DoubleSide,
+  //   color: 0xff0000
+  // })
+  // const line12 = new THREE.Line(geometry13, material12)
+
+  // scene.add(line12)
+
+  const geometry14 = new THREE.BufferGeometry() //创建一个几何体对象
+  // 三维样条曲线
+  const curve1 = new THREE.CatmullRomCurve3([new THREE.Vector3(-50, 20, 90), new THREE.Vector3(-10, 40, 40), new THREE.Vector3(0, 0, 0), new THREE.Vector3(60, -60, 0), new THREE.Vector3(70, 0, 80)])
+  const pointsArr12 = curve1.getSpacedPoints(100) //曲线取点
+  geometry14.setFromPoints(pointsArr12) //pointsArr赋值给顶点位置属性
+
+  const pos = geometry14.attributes.position
+  const count = pos.count //顶点数量
+  // 计算每个顶点的颜色值
+  const colorsArr = []
+  for (let i = 0; i < count; i++) {
+    const percent = i / count //点索引值相对所有点数量的百分比
+    //根据顶点位置顺序大小设置颜色渐变
+    // 红色分量从0到1变化，蓝色分量从1到0变化
+    colorsArr.push(percent, 0, 1 - percent) //蓝色到红色渐变色
+  }
+  //类型数组创建顶点颜色color数据
+  const colors = new Float32Array(colorsArr)
+  // 设置几何体attributes属性的颜色color属性
+  geometry14.attributes.color = new THREE.BufferAttribute(colors, 3)
+
+  const material13 = new THREE.LineBasicMaterial({
+    vertexColors: true, //使用顶点颜色渲染
+    linewidth: 10
+  })
+  const line12 = new THREE.Line(geometry14, material13)
+  scene.add(line12)
+
+
+
   function tick() {
     //console.log(camera.position)
+    texture.offset.x += 0.01
     const time = clock.getElapsedTime()
     spherebox.position.z = Math.sin(time) * 100
     spherebox.position.x = Math.cos(time) * 100
