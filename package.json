@@ -37,7 +37,8 @@
     "@types/dat.gui": "0.7.7",
     "@types/jsdom": "^16.2.15",
     "@types/cannon": "^0.1.10",
-    "spectorjs": "^0.9.29"
+    "spectorjs": "^0.9.29",
+    "@types/gl": "^6.0.2"
   },
   "browserify": {
     "transform": ["glslify"]

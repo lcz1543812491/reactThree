@@ -76,6 +76,9 @@ devDependencies:
   '@types/dat.gui':
     specifier: 0.7.7
     version: registry.npmmirror.com/@types/dat.gui@0.7.7
+  '@types/gl':
+    specifier: ^6.0.2
+    version: registry.npmmirror.com/@types/gl@6.0.2
   '@types/jsdom':
     specifier: ^16.2.15
     version: registry.npmmirror.com/@types/jsdom@16.2.15
@@ -581,6 +584,12 @@ packages:
     name: '@types/draco3d'
     version: 1.4.6
     dev: false
+
+  registry.npmmirror.com/@types/gl@6.0.2:
+    resolution: {integrity: sha512-5vlkHzpu25w2zJ6i41rYbglH3sSTvkFPi34J5p/kYhlS3hF31GaDGWif1jSiKSy8+UCuFlejXPya0hkLKIn++A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/gl/-/gl-6.0.2.tgz}
+    name: '@types/gl'
+    version: 6.0.2
+    dev: true
 
   registry.npmmirror.com/@types/jsdom@16.2.15:
     resolution: {integrity: sha512-nwF87yjBKuX/roqGYerZZM0Nv1pZDMAT5YhOHYeM/72Fic+VEqJh4nyoqoapzJnW3pUlfxPY5FhgsJtM+dRnQQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/jsdom/-/jsdom-16.2.15.tgz}
