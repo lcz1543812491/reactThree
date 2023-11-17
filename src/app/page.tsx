@@ -94,6 +94,9 @@ export default function Home() {
         <Link href="/smartCity" className="text-white text-center">
           Smart City
         </Link>
+        <Link href="/glPractise" className="text-white text-center">
+          WebGl Practise
+        </Link>
       </main>
     </main>
   )
