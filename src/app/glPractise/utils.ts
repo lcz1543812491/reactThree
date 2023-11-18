@@ -17,10 +17,9 @@ export function inintGlPractise(props: InintGlPractise) {
   //   mat4.ortho(projectMatrix, 0, window.innerWidth, window.innerHeight, 0, -1, 1)
 
   const vertShader = `
-  attribute vec4 a_position;
-  uniform     mat4    proj;
+  attribute vec2 a_position;
   void main(){
-      gl_Position = vec4(0.0, 0.0, 0.0, 1.0);
+      gl_Position = vec4(a_position, 0.0, 1.0);
       gl_PointSize = 40.0;
   }
   `
@@ -29,7 +28,14 @@ export function inintGlPractise(props: InintGlPractise) {
     gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
   }`
 
-  initShaders({ gl: webgl as WebGLRenderingContext, fragmentSource: fragShader, vertexSource: vertShader })
+  const program = initShaders({ gl: webgl as WebGLRenderingContext, fragmentSource: fragShader, vertexSource: vertShader })
+
+  const attrLocation = webgl?.getAttribLocation(program as WebGLProgram, 'a_position')
+
+  // webgl?.vertexAttrib2f(attrLocation as number, -0.8, 0.0)
+
+  webgl?.vertexAttrib2fv(attrLocation as number, new Float32Array([-0.8, 0.1]))
+
 
   webgl?.clearColor(0.0, 0.0, 0.0, 1.0)
   webgl?.clear(webgl.COLOR_BUFFER_BIT)
