@@ -1,6 +1,6 @@
 'use client'
 
-import { inintGlPractise } from './utils';
+import { inintGlPractise1 } from './utils';
 import { useEffect, useRef } from 'react'
 
 export default function Three() {
@@ -8,7 +8,7 @@ export default function Three() {
   const canvasRef = useRef(null)
  
   useEffect(() => {
-    inintGlPractise({ canvasRef: canvasRef.current as unknown as HTMLCanvasElement })
+    inintGlPractise1({ canvasRef: canvasRef.current as unknown as HTMLCanvasElement })
   }, [])
 
     return (

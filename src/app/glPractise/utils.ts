@@ -55,3 +55,42 @@ export function inintGlPractise(props: InintGlPractise) {
   }
 
 }
+
+export function inintGlPractise1(props: InintGlPractise) {
+  const { canvasRef } = props
+  const webgl = canvasRef.getContext('webgl')
+
+  const vertShader = `
+  attribute vec2 a_position;
+  void main(){
+      gl_Position = vec4(a_position, 0.0, 1.0);
+      gl_PointSize = 10.0;
+  }
+  `
+
+  const fragShader = `
+  precision highp float;
+  uniform vec3 u_color;
+
+  void main(){
+    gl_FragColor = vec4(u_color, 1.0);
+  }`
+
+  const program = initShaders({ gl: webgl as WebGLRenderingContext, fragmentSource: fragShader, vertexSource: vertShader })
+
+  // webgl?.vertexAttrib2f(attrLocation as number, -0.8, 0.0)
+  webgl?.clearColor(0.0, 0.0, 0.0, 1.0)
+  webgl?.clear(webgl.COLOR_BUFFER_BIT)
+
+
+  const a_position = webgl?.getAttribLocation(program as  WebGLProgram, 'a_position')
+
+  webgl?.vertexAttrib2f(a_position as number, -0.5, 0.0)
+
+
+  const u_color = webgl?.getUniformLocation(program as WebGLProgram, 'u_color')
+  webgl?.uniform3f(u_color as number, 1.0, 0.0, 0.0)
+
+  webgl?.drawArrays(webgl.POINTS, 0, 1)
+
+}
