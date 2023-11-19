@@ -1,7 +1,7 @@
 import { mat4 } from 'gl-matrix'
 import { initShaders } from '../../components/initShader'
 
-interface InintGlPractise {
+export interface InintGlPractise {
   canvasRef: HTMLCanvasElement
 }
 
