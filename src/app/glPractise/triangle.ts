@@ -14,6 +14,7 @@ export function inintTriangle(props: InintGlPractise) {
       void main(){
        v_color = a_color;
        gl_Position = vec4(a_position, 0.0, 1.0);
+       gl_PointSize = 10.0;
       }
     `
 
@@ -29,11 +30,39 @@ export function inintTriangle(props: InintGlPractise) {
   webgl?.clearColor(0.0, 0.0, 0.0, 1.0)
   webgl?.clear(webgl.COLOR_BUFFER_BIT)
 
-  const vertexts = new Float32Array([
-    -0.5, 0.0, 1.0, 0.0, 0.0,
-    0.5, 0.0, 0.0, 1.0, 0.0,
-    0.0, 0.5, 0.0, 0.0, 1.0,
-  ])
+  // const vertexts = new Float32Array([
+  //   -0.5, 0.0, 1.0, 0.0, 0.0,
+  //   0.5, 0.0, 0.0, 1.0, 0.0,
+  //   0.0, 0.5, 0.0, 0.0, 1.0,
+  // ])
+
+
+  // const vertexts = new Float32Array([
+  //   -0.5, 0.5, 1.0, 0.0, 0.0,
+  //   -0.5, -0.5, 0.0, 1.0, 0.0,
+  //   0.5, -0.5, 0.0, 0.0, 1.0,
+  //   0.5, 0.5, 1.0, 0.0, 0.0,
+  // ])
+
+  const vertext = []
+  const R = 0.5
+  const count = 20
+  for(let i = 0; i < count; i++){
+    const deg = 2 * Math.PI / count * i
+    const x = R * Math.cos(deg)
+    const y = R * Math.sin(deg)
+
+
+    const r = (Math.random() - 0.5) * 2
+    const g = (Math.random() - 0.5) * 2
+    const b = (Math.random() - 0.5) * 2
+
+    vertext.push(x, y, r, g, b)
+
+  }
+
+  const vertexts = new Float32Array(vertext)
+
 
   const buffer = webgl.createBuffer()
   webgl.bindBuffer(webgl.ARRAY_BUFFER, buffer)
@@ -50,6 +79,12 @@ export function inintTriangle(props: InintGlPractise) {
   const a_color = webgl.getAttribLocation(program, 'a_color')
   webgl.vertexAttribPointer(a_color, 3, webgl.FLOAT, false, 5 * vertexts.BYTES_PER_ELEMENT, 2 * vertexts.BYTES_PER_ELEMENT)
   webgl.enableVertexAttribArray(a_color)
+  // const n = 4
 
-  webgl.drawArrays(webgl.TRIANGLES, 0, 3)
+  // webgl.drawArrays(webgl.TRIANGLES, 0, 3)
+
+  webgl.drawArrays(webgl.POINTS, 0, count)
+  //webgl.drawArrays(webgl.LINES, 0, 4)
+  // webgl.drawArrays(webgl.LINE_LOOP, 0, 4)
+  webgl.drawArrays(webgl.TRIANGLE_FAN, 0, count)
 }
