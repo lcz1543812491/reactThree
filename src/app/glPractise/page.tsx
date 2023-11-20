@@ -2,6 +2,7 @@
 
 import { inintGlPractise1 } from './utils';
 import { inintTriangle } from './triangle'
+import { inintAnimate } from './animate'
 import { useEffect, useRef } from 'react'
 
 export default function Three() {
@@ -10,7 +11,8 @@ export default function Three() {
  
   useEffect(() => {
     // inintGlPractise1({ canvasRef: canvasRef.current as unknown as HTMLCanvasElement })
-    inintTriangle({ canvasRef: canvasRef.current as unknown as HTMLCanvasElement })
+    // inintTriangle({ canvasRef: canvasRef.current as unknown as HTMLCanvasElement })
+    inintAnimate({ canvasRef: canvasRef.current as unknown as HTMLCanvasElement })
   }, [])
 
     return (
