@@ -1,3 +1,5 @@
+import { mat4 } from 'gl-matrix'
+
 import { initShaders } from '../../components/initShader'
 import { InintGlPractise } from './utils'
 
@@ -53,10 +55,18 @@ export function inintAnimate(props: InintGlPractise) {
     sy = 2,
     sz = 1
 
-  const matrixs = [sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1]
+  // const matrixs = [sx, 0, 0, 0, 0, sy, 0, 0, 0, 0, sz, 0, 0, 0, 0, 1]
+
+  const matrixs = mat4.create()
+
+  //mat4.fromScaling(matrixs, [2, 1, 1])
+  // mat4.fromTranslation(matrixs, [0.2, 0.2, 0])
+  mat4.fromRotation(matrixs, 90 / 180 * Math.PI, [0, 0, 1])
+
+
 
   const u_matrix = webgl.getUniformLocation(program, 'u_matrix')
-  webgl.uniformMatrix4fv(u_matrix, false, new Float32Array(matrixs))
+  webgl.uniformMatrix4fv(u_matrix, false, matrixs)
 
   //   const a_color = webgl.getAttribLocation(program, 'a_color')
   //   webgl.vertexAttribPointer(a_color, 3, webgl.FLOAT, false, 5 * vertexts.BYTES_PER_ELEMENT, 2 * vertexts.BYTES_PER_ELEMENT)
