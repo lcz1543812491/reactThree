@@ -2,6 +2,7 @@ import { mat4 } from 'gl-matrix'
 
 import { initShaders } from '../../components/initShader'
 import { InintGlPractise } from './utils'
+import { positions, colors as Vcolors } from './cube'
 
 export function init3D(props: InintGlPractise) {
   const { canvasRef } = props
@@ -10,10 +11,12 @@ export function init3D(props: InintGlPractise) {
   const vertexShader = `  
     attribute vec3 a_position;
     attribute vec3 a_color;
+    varying vec3 v_color;
     uniform vec4 u_translate;
     uniform mat4 u_rotateMatrix;
 
     void main(){
+     v_color = a_color;
      gl_Position = u_rotateMatrix * vec4(a_position, 1.0);
      gl_PointSize = 10.0;
     }
@@ -21,17 +24,20 @@ export function init3D(props: InintGlPractise) {
 
   const fragMentShader = `
   precision highp float;
+  varying vec3 v_color;
 
   void main(){
-    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    gl_FragColor = vec4(v_color, 1.0);
   }
 `
-  const vertexs = new Float32Array([
-    -0.5, 0.5, 0.0, 
-    -0.5, -0.5, 0.0, 
-    0.5, -0.5, 0.0, 
-    0.5, 0.5, 0.0
-  ])
+  //   const vertexs = new Float32Array([
+  //     -0.5, 0.5, 0.0,
+  //     -0.5, -0.5, 0.0,
+  //     0.5, -0.5, 0.0,
+  //     0.5, 0.5, 0.0
+  //   ])
+
+  const vertexs = new Float32Array(positions)
 
   const program = initShaders({ gl: webgl, fragmentSource: fragMentShader, vertexSource: vertexShader })
 
@@ -46,9 +52,14 @@ export function init3D(props: InintGlPractise) {
   webgl.vertexAttribPointer(a_position, 3, webgl.FLOAT, false, 3 * vertexs.BYTES_PER_ELEMENT, 0)
   webgl.enableVertexAttribArray(a_position)
 
+  const buffer1 = webgl.createBuffer()
+  webgl.bindBuffer(webgl.ARRAY_BUFFER, buffer1)
+  webgl.bufferData(webgl.ARRAY_BUFFER, new Float32Array(Vcolors), webgl.STATIC_DRAW)
+  const a_color = webgl.getAttribLocation(program as WebGLProgram, 'a_color')
+  webgl.vertexAttribPointer(a_color, 3, webgl.FLOAT, false, 3 * vertexs.BYTES_PER_ELEMENT, 0)
+  webgl.enableVertexAttribArray(a_color)
 
-  const rotateMatrix  = mat4.create()
-
+  const rotateMatrix = mat4.create()
 
   function draw(webgl: WebGLRenderingContext) {
     const n = 4
@@ -58,17 +69,19 @@ export function init3D(props: InintGlPractise) {
     // webgl.drawArrays(webgl.POINTS, 0, n)
     //webgl.drawArrays(webgl.LINES, 0, 4)
     // webgl.drawArrays(webgl.LINE_LOOP, 0, 4)
-    webgl.drawArrays(webgl.TRIANGLE_FAN, 0, n)
+    webgl.enable(webgl.DEPTH_TEST)
+    
+    for(let i = 0; i < 24; i+= 4){
+      webgl.drawArrays(webgl.TRIANGLE_FAN, i, n)
+    }
+
   }
 
   let deg = 0
 
-  function  tick(){
-    
+  function tick() {
     deg += 1
-
-
-    mat4.fromRotation(rotateMatrix, deg / 180 * Math.PI,  [1, 0, 1])
+    mat4.fromRotation(rotateMatrix, (deg / 180) * Math.PI, [1, 0, 1])
 
     const u_rotateMatrix = webgl.getUniformLocation(program as WebGLProgram, 'u_rotateMatrix')
     webgl.uniformMatrix4fv(u_rotateMatrix, false, rotateMatrix)
