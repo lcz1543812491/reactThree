@@ -12,12 +12,16 @@ export function init3D(props: InintGlPractise) {
     attribute vec3 a_position;
     attribute vec3 a_color;
     varying vec3 v_color;
-    uniform vec4 u_translate;
+    uniform mat4 u_translate;
     uniform mat4 u_rotateMatrix;
+    uniform mat4 u_scaleMatrix;
 
     void main(){
      v_color = a_color;
-     gl_Position = u_rotateMatrix * vec4(a_position, 1.0);
+     
+     mat4 modelMatrix = u_rotateMatrix * u_translate * u_scaleMatrix;
+
+     gl_Position = modelMatrix * vec4(a_position, 1.0);
      gl_PointSize = 10.0;
     }
   `
@@ -60,6 +64,24 @@ export function init3D(props: InintGlPractise) {
   webgl.enableVertexAttribArray(a_color)
 
   const rotateMatrix = mat4.create()
+  mat4.fromRotation(rotateMatrix, (45 / 180) * Math.PI, [1, 0, 1])
+  const u_rotateMatrix = webgl.getUniformLocation(program as WebGLProgram, 'u_rotateMatrix')
+  webgl.uniformMatrix4fv(u_rotateMatrix, false, rotateMatrix)
+
+
+  const translate = mat4.create()
+  mat4.fromTranslation(translate, [0, 0, 1])
+  const u_translate = webgl.getUniformLocation(program as WebGLProgram, 'u_translate')
+  webgl.uniformMatrix4fv(u_translate, false, translate)
+
+
+  const scaleMatrix = mat4.create()
+  mat4.fromScaling(scaleMatrix, [0.5, 1, 1])
+  const u_scaleMatrix = webgl.getUniformLocation(program as WebGLProgram, 'u_scaleMatrix')
+  webgl.uniformMatrix4fv(u_scaleMatrix, false, scaleMatrix)
+
+
+
 
   function draw(webgl: WebGLRenderingContext) {
     const n = 4
@@ -70,24 +92,24 @@ export function init3D(props: InintGlPractise) {
     //webgl.drawArrays(webgl.LINES, 0, 4)
     // webgl.drawArrays(webgl.LINE_LOOP, 0, 4)
     webgl.enable(webgl.DEPTH_TEST)
-    
-    for(let i = 0; i < 24; i+= 4){
+
+    for (let i = 0; i < 24; i += 4) {
       webgl.drawArrays(webgl.TRIANGLE_FAN, i, n)
     }
-
   }
+  draw(webgl)
 
   let deg = 0
 
-  function tick() {
-    deg += 1
-    mat4.fromRotation(rotateMatrix, (deg / 180) * Math.PI, [1, 0, 1])
+  //   function tick() {
+  //     deg += 1
+  //     mat4.fromRotation(rotateMatrix, (deg / 180) * Math.PI, [1, 0, 1])
 
-    const u_rotateMatrix = webgl.getUniformLocation(program as WebGLProgram, 'u_rotateMatrix')
-    webgl.uniformMatrix4fv(u_rotateMatrix, false, rotateMatrix)
-    draw(webgl)
-    requestAnimationFrame(tick)
-  }
+  //     const u_rotateMatrix = webgl.getUniformLocation(program as WebGLProgram, 'u_rotateMatrix')
+  //     webgl.uniformMatrix4fv(u_rotateMatrix, false, rotateMatrix)
+  //     draw(webgl)
+  //     requestAnimationFrame(tick)
+  //   }
 
-  tick()
+  // tick()
 }
