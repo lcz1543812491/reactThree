@@ -6,12 +6,12 @@ import { vec3, mix, flatten } from './common/MV'
 // @ts-ignore
 import VertexShader from './shader/vertexShader.glsl'
 // @ts-ignore
-import  FragmentShader from './shader/fragmentShader.glsl'
+import FragmentShader from './shader/fragmentShader.glsl'
 
 const points: number[][] = []
 const colors: number[][] = []
 
-const NumTimesToSubdivide = 3
+const NumTimesToSubdivide = 6
 
 function triangle(a: number[], b: number[], c: number[], color: number) {
   // add colors and vertices for one triangle
@@ -46,12 +46,12 @@ function divideTetra(a: number[], b: number[], c: number[], d: number[], count: 
   // find midpoints of sides
   // divide four smaller tetrahedra
   else {
-    var ab = mix(a, b, 0.5)
-    var ac = mix(a, c, 0.5)
-    var ad = mix(a, d, 0.5)
-    var bc = mix(b, c, 0.5)
-    var bd = mix(b, d, 0.5)
-    var cd = mix(c, d, 0.5)
+    var ab = mix(a, b, 0.5 + Math.random() * 0.1)
+    var ac = mix(a, c, 0.5 + Math.random() * 0.2)
+    var ad = mix(a, d, 0.5 + Math.random() * 0.1)
+    var bc = mix(b, c, 0.5 + Math.random() * 0.2)
+    var bd = mix(b, d, 0.5 + Math.random() * 0.1)
+    var cd = mix(c, d, 0.5 + Math.random() * 0.3)
 
     --count
 
@@ -73,37 +73,34 @@ export function init3dTrangle(props: InintGlPractise) {
 
   divideTetra(vertices[0], vertices[1], vertices[2], vertices[3], NumTimesToSubdivide)
 
-  const program = initShaders({gl, fragmentSource: FragmentShader, vertexSource: VertexShader})
+  const program = initShaders({ gl, fragmentSource: FragmentShader, vertexSource: VertexShader })
 
-  const cBuffer = gl.createBuffer();
-  gl.bindBuffer( gl.ARRAY_BUFFER, cBuffer );
-  gl.bufferData( gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW );
+  const cBuffer = gl.createBuffer()
+  gl.bindBuffer(gl.ARRAY_BUFFER, cBuffer)
+  gl.bufferData(gl.ARRAY_BUFFER, flatten(colors), gl.STATIC_DRAW)
 
-  const vColor = gl.getAttribLocation( program as WebGLProgram, "vColor" );
-  gl.vertexAttribPointer( vColor, 3, gl.FLOAT, false, 0, 0 );
-  gl.enableVertexAttribArray( vColor );
+  const vColor = gl.getAttribLocation(program as WebGLProgram, 'vColor')
+  gl.vertexAttribPointer(vColor, 3, gl.FLOAT, false, 0, 0)
+  gl.enableVertexAttribArray(vColor)
 
-  const vBuffer = gl.createBuffer();
-  gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
-  gl.bufferData( gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW );
+  const vBuffer = gl.createBuffer()
+  gl.bindBuffer(gl.ARRAY_BUFFER, vBuffer)
+  gl.bufferData(gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW)
 
-  const vPosition = gl.getAttribLocation( program as WebGLProgram, "vPosition" );
-  gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0 );
-  gl.enableVertexAttribArray( vPosition );
+  const vPosition = gl.getAttribLocation(program as WebGLProgram, 'vPosition')
+  gl.vertexAttribPointer(vPosition, 3, gl.FLOAT, false, 0, 0)
+  gl.enableVertexAttribArray(vPosition)
 
   // console.log('points', points, colors)
-  gl.clearColor( 0, 0, 0, 1.0 );
+  gl.clearColor(0, 0, 0, 1.0)
 
   // enable hidden-surface removal
-  gl.enable(gl.DEPTH_TEST);
+  gl.enable(gl.DEPTH_TEST)
 
-  gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-  gl.drawArrays( gl.TRIANGLES, 0, points.length );
-
-  
+  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+  gl.drawArrays(gl.TRIANGLES, 0, points.length)
 
   window.addEventListener('resize', () => {
     // gl.viewport(0, 0, window.innerWidth, window.innerHeight)
-    
   })
 }
