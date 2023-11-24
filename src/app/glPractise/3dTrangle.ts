@@ -92,12 +92,12 @@ export function init3dTrangle(props: InintGlPractise) {
   gl.enableVertexAttribArray( vPosition );
 
   // console.log('points', points, colors)
-  gl.clearColor( 1.0, 1.0, 1.0, 1.0 );
+  gl.clearColor( 0, 0, 0, 1.0 );
 
   // enable hidden-surface removal
   gl.enable(gl.DEPTH_TEST);
 
-  // gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+  gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   gl.drawArrays( gl.TRIANGLES, 0, points.length );
 
   
