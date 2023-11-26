@@ -11,7 +11,7 @@ import FragmentShader from './shader/fragmentShader.glsl'
 const points: number[][] = []
 const colors: number[][] = []
 
-const NumTimesToSubdivide = 6
+const NumTimesToSubdivide = 3
 
 function triangle(a: number[], b: number[], c: number[], color: number) {
   // add colors and vertices for one triangle
@@ -46,12 +46,12 @@ function divideTetra(a: number[], b: number[], c: number[], d: number[], count: 
   // find midpoints of sides
   // divide four smaller tetrahedra
   else {
-    var ab = mix(a, b, 0.5 + Math.random() * 0.1)
-    var ac = mix(a, c, 0.5 + Math.random() * 0.2)
-    var ad = mix(a, d, 0.5 + Math.random() * 0.1)
-    var bc = mix(b, c, 0.5 + Math.random() * 0.2)
-    var bd = mix(b, d, 0.5 + Math.random() * 0.1)
-    var cd = mix(c, d, 0.5 + Math.random() * 0.3)
+    var ab = mix(a, b, 0.5)
+    var ac = mix(a, c, 0.5)
+    var ad = mix(a, d, 0.5)
+    var bc = mix(b, c, 0.5)
+    var bd = mix(b, d, 0.5)
+    var cd = mix(c, d, 0.5)
 
     --count
 
@@ -90,6 +90,11 @@ export function init3dTrangle(props: InintGlPractise) {
   const vPosition = gl.getAttribLocation(program as WebGLProgram, 'vPosition')
   gl.vertexAttribPointer(vPosition, 3, gl.FLOAT, false, 0, 0)
   gl.enableVertexAttribArray(vPosition)
+
+  const rotateMatrix = mat4.create()
+  mat4.fromRotation(rotateMatrix, (30 / 180) * Math.PI, [1, 0, 1])
+  const u_rotateMatrix = gl.getUniformLocation(program as WebGLProgram, 'u_rotateMatrix')
+  gl.uniformMatrix4fv(u_rotateMatrix, false, rotateMatrix)
 
   // console.log('points', points, colors)
   gl.clearColor(0, 0, 0, 1.0)
