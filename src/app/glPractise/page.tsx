@@ -6,6 +6,7 @@ import { inintAnimate } from './animate'
 // import { inintUv } from './uv'
 import { init3D } from './3d'
 import { init3dTrangle } from './3dTrangle'
+import { initCubeRotate } from './cubeRotate'
 import { useEffect, useRef } from 'react'
 
 export default function Three() {
@@ -18,7 +19,8 @@ export default function Three() {
     // inintAnimate({ canvasRef: canvasRef.current as unknown as HTMLCanvasElement })
     // inintUv({ canvasRef: canvasRef.current as unknown as HTMLCanvasElement })
     // init3D({ canvasRef: canvasRef.current as unknown as HTMLCanvasElement })
-    init3dTrangle({ canvasRef: canvasRef.current as unknown as HTMLCanvasElement })
+    // init3dTrangle({ canvasRef: canvasRef.current as unknown as HTMLCanvasElement })
+    initCubeRotate({ canvasRef: canvasRef.current as unknown as HTMLCanvasElement })
   }, [])
 
     return (
